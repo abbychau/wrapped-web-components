@@ -7,7 +7,8 @@
   "module": "dist/index.esm.js",
   "types": "dist/index.d.ts",
   "files": [
-    "dist"
+    "dist",
+    "examples/assets/wwc-logo.svg"
   ],
   "scripts": {
     "build": "rollup -c",
@@ -26,7 +27,11 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": ""
+    "url": "https://github.com/abbychau/wrapped-web-components"
+  },
+  "homepage": "https://github.com/abbychau/wrapped-web-components#readme",
+  "bugs": {
+    "url": "https://github.com/abbychau/wrapped-web-components/issues"
   },
   "devDependencies": {
     "@rollup/plugin-node-resolve": "^16.0.1",
