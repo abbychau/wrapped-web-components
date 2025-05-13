@@ -1,0 +1,38 @@
+{
+  "name": "wrapped-web-components",
+  "version": "0.1.0",
+  "description": "A library that simplifies web component creation with plain HTML, JS, and CSS",
+  "type": "module",
+  "main": "dist/index.js",
+  "module": "dist/index.esm.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "rollup -c",
+    "dev": "rollup -c -w",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "serve": "http-server -o"
+  },
+  "keywords": [
+    "web-components",
+    "custom-elements",
+    "html",
+    "javascript",
+    "css"
+  ],
+  "author": "",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": ""
+  },
+  "devDependencies": {
+    "@rollup/plugin-node-resolve": "^16.0.1",
+    "@rollup/plugin-terser": "^0.4.4",
+    "http-server": "^14.1.1",
+    "rollup": "^4.40.2",
+    "rollup-plugin-livereload": "^2.0.5"
+  }
+}

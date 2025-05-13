@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>WWC - JavaScript API Example</title>
+  <link rel="icon" href="assets/favicon.svg">
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+      line-height: 1.6;
+      color: #333;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+    
+    header {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+    
+    .logo {
+      width: 100px;
+      margin-bottom: 10px;
+    }
+    
+    h1 {
+      margin: 0;
+      color: #e64c3c;
+    }
+    
+    .example {
+      margin-bottom: 40px;
+      padding: 20px;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      background-color: #fff;
+    }
+    
+    .demo {
+      margin-top: 20px;
+      padding: 20px;
+      background-color: #f9f9f9;
+      border-radius: 4px;
+    }
+    
+    pre {
+      background-color: #f5f5f5;
+      padding: 15px;
+      border-radius: 4px;
+      overflow-x: auto;
+    }
+    
+    code {
+      font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <img src="assets/wwc-logo.svg" alt="WWC Logo" class="logo">
+    <h1>Wrapped Web Components</h1>
+    <p>JavaScript API Example</p>
+  </header>
+
+  <div class="example">
+    <h2>Using JavaScript API</h2>
+    <p>This example demonstrates how to create a component using the JavaScript API with template literals.</p>
+    
+    <h3>Component Code:</h3>
+    <pre><code>import { define, html, css } from 'wrapped-web-components';
+
+define('color-picker', {
+  // HTML template with interpolation
+  template: html`
+    &lt;div class="color-picker"&gt;
+      &lt;h3&gt;Color Picker&lt;/h3&gt;
+      &lt;div class="color-display" id="color-display"&gt;&lt;/div&gt;
+      &lt;div class="color-controls"&gt;
+        &lt;div class="color-slider"&gt;
+          &lt;label for="hue"&gt;Hue:&lt;/label&gt;
+          &lt;input type="range" id="hue" min="0" max="360" value="180" ${html.event('input', 'updateColor')}/&gt;
+        &lt;/div&gt;
+        &lt;!-- More sliders... --&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+  `,
+
+  // CSS styles
+  styles: css`
+    .color-display {
+      height: 80px;
+      border-radius: 4px;
+      background-color: hsl(180, 50%, 50%);
+    }
+    /* More styles... */
+  `,
+
+  // Component properties and methods
+  properties: {
+    hue: { default: 180, reflect: true },
+    saturation: { default: 50, reflect: true },
+    lightness: { default: 50, reflect: true }
+  },
+  
+  methods: {
+    updateColor() {
+      // Update color based on slider values
+    }
+    // More methods...
+  }
+});</code></pre>
+
+    <div class="demo">
+      <h3>Live Demo:</h3>
+      <color-picker></color-picker>
+    </div>
+  </div>
+
+  <script type="module" src="js-api-example.js"></script>
+</body>
+</html>
