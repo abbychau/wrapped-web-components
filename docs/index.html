@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Wrapped Web Components (WWC)</title>
+  <link rel="icon" href="./assets/favicon.svg" type="image/svg+xml">
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 20px;
+      line-height: 1.6;
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+
+    .logo {
+      width: 150px;
+      height: 150px;
+      margin-bottom: 20px;
+    }
+
+    h1 {
+      margin-bottom: 10px;
+    }
+
+    .tagline {
+      font-size: 1.2rem;
+      color: #666;
+      margin-bottom: 30px;
+    }
+
+    .main-nav {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 40px;
+      flex-wrap: wrap;
+    }
+
+    .main-nav a {
+      display: inline-block;
+      margin: 0 10px 10px;
+      padding: 10px 20px;
+      background-color: #e64c3c;
+      color: white;
+      text-decoration: none;
+      border-radius: 4px;
+      font-weight: bold;
+      transition: background-color 0.2s;
+    }
+
+    .main-nav a:hover {
+      background-color: #d44235;
+    }
+
+    .section {
+      margin-bottom: 40px;
+      padding: 20px;
+      border: 1px solid #eee;
+      border-radius: 4px;
+    }
+
+    .section h2 {
+      margin-top: 0;
+      border-bottom: 1px solid #eee;
+      padding-bottom: 10px;
+    }
+
+    code {
+      font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+      background-color: #f5f5f5;
+      padding: 2px 4px;
+      border-radius: 3px;
+    }
+
+    pre {
+      background-color: #f5f5f5;
+      padding: 15px;
+      border-radius: 4px;
+      overflow-x: auto;
+    }
+
+    .feature-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 20px;
+    }
+
+    .feature-item {
+      padding: 15px;
+      background-color: #f9f9f9;
+      border-radius: 4px;
+    }
+
+    .feature-item h3 {
+      margin-top: 0;
+    }
+
+    footer {
+      margin-top: 60px;
+      text-align: center;
+      color: #666;
+      font-size: 0.9rem;
+    }
+
+    .github-link {
+      display: inline-flex;
+      align-items: center;
+      margin-top: 10px;
+      color: #333;
+      text-decoration: none;
+    }
+
+    .github-link svg {
+      margin-right: 5px;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <img src="./assets/wwc-logo.svg" alt="WWC Logo" class="logo">
+    <h1>Wrapped Web Components (WWC)</h1>
+    <p class="tagline">A lightweight JavaScript library that simplifies web component creation</p>
+    <div class="main-nav">
+      <a href="examples.html">Live Examples</a>
+      <a href="js-api-example.html">JavaScript API</a>
+      <a href="https://github.com/abbychau/wrapped-web-components">GitHub</a>
+      <a href="https://www.npmjs.com/package/wrapped-web-components">NPM</a>
+    </div>
+  </header>
+
+  <div class="section">
+    <h2>About</h2>
+    <p>
+      Wrapped Web Components (WWC) is a lightweight JavaScript library that simplifies web component creation by allowing developers to use plain HTML, JS, and CSS instead of dealing with template.innerHTML and other low-level Web Component APIs.
+    </p>
+    <p>
+      With WWC, you can define components in separate HTML files with native HTML, CSS, and JS syntax, making your code more maintainable and easier to understand.
+    </p>
+  </div>
+
+  <div class="section">
+    <h2>Features</h2>
+    <div class="feature-list">
+      <div class="feature-item">
+        <h3>🌟 Simple API</h3>
+        <p>Easy-to-use API for defining custom elements without the complexity of native Web Components.</p>
+      </div>
+      <div class="feature-item">
+        <h3>📝 Plain HTML Templates</h3>
+        <p>Write components using plain HTML templates instead of string literals.</p>
+      </div>
+      <div class="feature-item">
+        <h3>📄 Separate HTML Files</h3>
+        <p>Define components in separate HTML files with native syntax for better organization.</p>
+      </div>
+      <div class="feature-item">
+        <h3>🎨 CSS Template Literals</h3>
+        <p>Add styles with CSS template literals for better syntax highlighting and organization.</p>
+      </div>
+      <div class="feature-item">
+        <h3>🔄 Property Reflection</h3>
+        <p>Automatic property-to-attribute reflection for better integration with HTML.</p>
+      </div>
+      <div class="feature-item">
+        <h3>🧩 Shadow DOM Options</h3>
+        <p>Works with or without Shadow DOM based on your needs.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>Installation</h2>
+    <h3>NPM</h3>
+    <pre><code>npm install wrapped-web-components</code></pre>
+    
+    <h3>CDN</h3>
+    <p>UMD Build (Global Variable):</p>
+    <pre><code>&lt;script src="https://unpkg.com/wrapped-web-components/dist/index.js"&gt;&lt;/script&gt;
+&lt;script&gt;
+  // The library is available as a global variable
+  const { define, html, css, register } = WebComponentWrapper;
+&lt;/script&gt;</code></pre>
+    
+    <p>ES Module:</p>
+    <pre><code>&lt;script type="module"&gt;
+  import { define, html, css, register } from 'https://unpkg.com/wrapped-web-components/dist/index.esm.js';
+&lt;/script&gt;</code></pre>
+  </div>
+
+  <footer>
+    <p>Wrapped Web Components (WWC) is released under the MIT License</p>
+    <a href="https://github.com/abbychau/wrapped-web-components" class="github-link">
+      <svg height="24" width="24" viewBox="0 0 16 16" version="1.1" aria-hidden="true">
+        <path fill-rule="evenodd" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"></path>
+      </svg>
+      GitHub Repository
+    </a>
+  </footer>
+</body>
+</html>

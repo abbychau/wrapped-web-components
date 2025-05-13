@@ -1,0 +1,296 @@
+<!--
+  todo-list.html
+  A simple todo list component using native HTML, CSS, and JS
+-->
+
+<template>
+  <div class="todo-container">
+    <h3>Todo List</h3>
+
+    <div class="add-todo">
+      <input type="text" id="new-todo" placeholder="Add a new task..." />
+      <button id="add-btn">Add</button>
+    </div>
+
+    <ul id="todo-list">
+      <!-- Todo items will be added here dynamically -->
+    </ul>
+
+    <div class="todo-stats">
+      <span id="items-left">0 items left</span>
+      <button id="clear-completed">Clear completed</button>
+    </div>
+  </div>
+</template>
+
+<style>
+  .todo-container {
+    padding: 15px;
+    background-color: #f9f9f9;
+    border-radius: 4px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+
+  .add-todo {
+    display: flex;
+    margin-bottom: 15px;
+  }
+
+  #new-todo {
+    flex-grow: 1;
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px 0 0 4px;
+    font-size: 16px;
+  }
+
+  #add-btn {
+    padding: 8px 15px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 0 4px 4px 0;
+    cursor: pointer;
+  }
+
+  #add-btn:hover {
+    background-color: #45a049;
+  }
+
+  #todo-list {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .todo-item {
+    display: flex;
+    align-items: center;
+    padding: 10px 0;
+    border-bottom: 1px solid #eee;
+  }
+
+  .todo-item:last-child {
+    border-bottom: none;
+  }
+
+  .todo-checkbox {
+    margin-right: 10px;
+  }
+
+  .todo-text {
+    flex-grow: 1;
+  }
+
+  .completed .todo-text {
+    text-decoration: line-through;
+    color: #888;
+  }
+
+  .delete-btn {
+    background-color: #f44336;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    padding: 3px 8px;
+    cursor: pointer;
+    font-size: 12px;
+  }
+
+  .delete-btn:hover {
+    background-color: #d32f2f;
+  }
+
+  .todo-stats {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 15px;
+    font-size: 14px;
+    color: #666;
+  }
+
+  #clear-completed {
+    background: none;
+    border: none;
+    color: #4CAF50;
+    cursor: pointer;
+    font-size: 14px;
+    padding: 0;
+  }
+
+  #clear-completed:hover {
+    text-decoration: underline;
+  }
+</style>
+
+<script>
+  // Export component configuration
+  exportDefault({
+    // Properties
+    properties: {
+      todos: {
+        default: [],
+        reflect: false // Don't reflect complex objects to attributes
+      }
+    },
+
+    // Methods
+    methods: {
+      addTodo() {
+        const input = this.shadowRoot.querySelector('#new-todo');
+        const text = input.value.trim();
+
+        // Make sure todos is an array
+        if (!Array.isArray(this.todos)) {
+          this._props.todos = [];
+        }
+
+        if (text) {
+          this.todos = [
+            ...this.todos,
+            {
+              id: Date.now(),
+              text,
+              completed: false
+            }
+          ];
+
+          input.value = '';
+          this.renderTodos();
+          this.updateStats();
+        }
+      },
+
+      toggleTodo(id) {
+        // Make sure todos is an array
+        if (!Array.isArray(this.todos)) {
+          this._props.todos = [];
+          return;
+        }
+
+        this.todos = this.todos.map(todo =>
+          todo.id === id ? { ...todo, completed: !todo.completed } : todo
+        );
+
+        this.renderTodos();
+        this.updateStats();
+      },
+
+      deleteTodo(id) {
+        // Make sure todos is an array
+        if (!Array.isArray(this.todos)) {
+          this._props.todos = [];
+          return;
+        }
+
+        this.todos = this.todos.filter(todo => todo.id !== id);
+        this.renderTodos();
+        this.updateStats();
+      },
+
+      clearCompleted() {
+        // Make sure todos is an array
+        if (!Array.isArray(this.todos)) {
+          this._props.todos = [];
+          return;
+        }
+
+        this.todos = this.todos.filter(todo => !todo.completed);
+        this.renderTodos();
+        this.updateStats();
+      },
+
+      renderTodos() {
+        const todoList = this.shadowRoot.querySelector('#todo-list');
+        todoList.innerHTML = '';
+
+        // Make sure todos is an array before using forEach
+        if (!Array.isArray(this.todos)) {
+          this._props.todos = [];
+          return;
+        }
+
+        this.todos.forEach(todo => {
+          const li = document.createElement('li');
+          li.className = `todo-item ${todo.completed ? 'completed' : ''}`;
+
+          const checkbox = document.createElement('input');
+          checkbox.type = 'checkbox';
+          checkbox.className = 'todo-checkbox';
+          checkbox.checked = todo.completed;
+          checkbox.addEventListener('change', () => this.toggleTodo(todo.id));
+
+          const span = document.createElement('span');
+          span.className = 'todo-text';
+          span.textContent = todo.text;
+
+          const deleteBtn = document.createElement('button');
+          deleteBtn.className = 'delete-btn';
+          deleteBtn.textContent = 'Delete';
+          deleteBtn.addEventListener('click', () => this.deleteTodo(todo.id));
+
+          li.appendChild(checkbox);
+          li.appendChild(span);
+          li.appendChild(deleteBtn);
+          todoList.appendChild(li);
+        });
+      },
+
+      updateStats() {
+        // Make sure todos is an array before using filter
+        if (!Array.isArray(this.todos)) {
+          this._props.todos = [];
+          this.shadowRoot.querySelector('#items-left').textContent = '0 items left';
+          return;
+        }
+
+        const itemsLeft = this.todos.filter(todo => !todo.completed).length;
+        const itemsLeftText = `${itemsLeft} item${itemsLeft !== 1 ? 's' : ''} left`;
+        this.shadowRoot.querySelector('#items-left').textContent = itemsLeftText;
+      }
+    },
+
+    // Lifecycle hooks
+    init() {
+      console.log('Todo list initialized');
+
+      // Make sure todos is initialized as an array
+      if (!Array.isArray(this.todos)) {
+        this._props.todos = [];
+      }
+
+      // Add event listeners
+      const addBtn = this.shadowRoot.querySelector('#add-btn');
+      const newTodoInput = this.shadowRoot.querySelector('#new-todo');
+      const clearCompletedBtn = this.shadowRoot.querySelector('#clear-completed');
+
+      addBtn.addEventListener('click', () => this.addTodo());
+
+      newTodoInput.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') {
+          this.addTodo();
+        }
+      });
+
+      clearCompletedBtn.addEventListener('click', () => this.clearCompleted());
+
+      // Initialize with some example todos
+      this.todos = [
+        { id: 1, text: 'Learn Web Components', completed: true },
+        { id: 2, text: 'Build a Todo List', completed: false },
+        { id: 3, text: 'Share with others', completed: false }
+      ];
+
+      this.renderTodos();
+      this.updateStats();
+    },
+
+    connected() {
+      console.log('Todo list connected to DOM');
+    },
+
+    disconnected() {
+      console.log('Todo list disconnected from DOM');
+    }
+  });
+</script>

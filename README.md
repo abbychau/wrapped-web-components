@@ -1,6 +1,10 @@
 <div align="center">
   <img src="examples/assets/wwc-logo.svg" alt="WWC Logo" width="150">
   <h1>Wrapped Web Components (WWC)</h1>
+  <p>
+    <a href="https://abbychau.github.io/wrapped-web-components/">View Demo</a> •
+    <a href="https://www.npmjs.com/package/wrapped-web-components">NPM Package</a>
+  </p>
 </div>
 
 A lightweight JavaScript library that simplifies web component creation by allowing developers to use plain HTML, JS, and CSS instead of dealing with template.innerHTML and other low-level Web Component APIs.

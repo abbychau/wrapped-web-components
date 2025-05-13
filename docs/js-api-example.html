@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Wrapped Web Components - JavaScript API Example</title>
+  <link rel="icon" href="./assets/favicon.svg" type="image/svg+xml">
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+    
+    header {
+      display: flex;
+      align-items: center;
+      margin-bottom: 30px;
+    }
+    
+    .logo {
+      width: 80px;
+      height: 80px;
+      margin-right: 20px;
+    }
+    
+    h1 {
+      margin: 0;
+      font-size: 1.8rem;
+    }
+    
+    header p {
+      margin: 5px 0 0;
+      color: #666;
+    }
+    
+    .nav {
+      margin-bottom: 20px;
+    }
+    
+    .nav a {
+      margin-right: 10px;
+      display: inline-block;
+      padding: 8px 16px;
+      background-color: #e64c3c;
+      color: white;
+      text-decoration: none;
+      border-radius: 4px;
+      font-weight: bold;
+      transition: background-color 0.2s;
+    }
+    
+    .nav a:hover {
+      background-color: #d44235;
+    }
+    
+    .example {
+      margin-bottom: 30px;
+      padding: 20px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+    }
+    
+    .example h2 {
+      margin-top: 0;
+      border-bottom: 1px solid #eee;
+      padding-bottom: 10px;
+    }
+    
+    .demo {
+      margin-top: 20px;
+      padding: 20px;
+      background-color: #f9f9f9;
+      border-radius: 4px;
+    }
+    
+    pre {
+      background-color: #f5f5f5;
+      padding: 15px;
+      border-radius: 4px;
+      overflow-x: auto;
+    }
+    
+    code {
+      font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+    }
+    
+    footer {
+      margin-top: 40px;
+      text-align: center;
+      color: #666;
+      font-size: 0.9rem;
+      padding-top: 20px;
+      border-top: 1px solid #eee;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <img src="./assets/wwc-logo.svg" alt="WWC Logo" class="logo">
+    <div>
+      <h1>Wrapped Web Components</h1>
+      <p>JavaScript API Example</p>
+    </div>
+  </header>
+
+  <div class="nav">
+    <a href="index.html">Home</a>
+    <a href="examples.html">Native HTML Examples</a>
+    <a href="js-api-example.html">JavaScript API Example</a>
+    <a href="https://github.com/abbychau/wrapped-web-components">GitHub</a>
+  </div>
+
+  <div class="example">
+    <h2>Using JavaScript API</h2>
+    <p>This example demonstrates how to create a component using the JavaScript API with template literals.</p>
+    
+    <h3>Component Code:</h3>
+    <pre><code>import { define, html, css } from 'wrapped-web-components';
+
+define('color-picker', {
+  // HTML template with interpolation
+  template: html`
+    &lt;div class="color-picker"&gt;
+      &lt;h3&gt;Color Picker&lt;/h3&gt;
+      &lt;div class="color-display" id="color-display"&gt;&lt;/div&gt;
+      &lt;div class="color-controls"&gt;
+        &lt;div class="color-slider"&gt;
+          &lt;label for="hue"&gt;Hue:&lt;/label&gt;
+          &lt;input type="range" id="hue" min="0" max="360" value="180" ${html.event('input', 'updateColor')}/&gt;
+        &lt;/div&gt;
+        &lt;div class="color-slider"&gt;
+          &lt;label for="saturation"&gt;Saturation:&lt;/label&gt;
+          &lt;input type="range" id="saturation" min="0" max="100" value="50" ${html.event('input', 'updateColor')}/&gt;
+        &lt;/div&gt;
+        &lt;div class="color-slider"&gt;
+          &lt;label for="lightness"&gt;Lightness:&lt;/label&gt;
+          &lt;input type="range" id="lightness" min="0" max="100" value="50" ${html.event('input', 'updateColor')}/&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+  `,
+
+  // CSS styles
+  styles: css`
+    .color-picker {
+      padding: 15px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+    }
+    
+    .color-display {
+      height: 80px;
+      border-radius: 4px;
+      margin-bottom: 15px;
+      background-color: hsl(180, 50%, 50%);
+    }
+    
+    .color-controls {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    
+    .color-slider {
+      display: flex;
+      align-items: center;
+    }
+    
+    .color-slider label {
+      width: 100px;
+    }
+    
+    .color-slider input {
+      flex: 1;
+    }
+  `,
+
+  // Component methods
+  methods: {
+    updateColor() {
+      const hue = this.shadowRoot.querySelector('#hue').value;
+      const saturation = this.shadowRoot.querySelector('#saturation').value;
+      const lightness = this.shadowRoot.querySelector('#lightness').value;
+      
+      const colorDisplay = this.shadowRoot.querySelector('#color-display');
+      colorDisplay.style.backgroundColor = `hsl(${hue}, ${saturation}%, ${lightness}%)`;
+    },
+    
+    // Lifecycle hooks
+    init() {
+      // Initialize the color display
+      this.updateColor();
+    }
+  }
+});</code></pre>
+    
+    <h3>Live Demo:</h3>
+    <div class="demo">
+      <color-picker></color-picker>
+    </div>
+  </div>
+
+  <footer>
+    <p>Wrapped Web Components (WWC) is released under the MIT License</p>
+    <p><a href="https://github.com/abbychau/wrapped-web-components">GitHub Repository</a></p>
+  </footer>
+
+  <script type="module">
+    // Import the library from CDN
+    import { define, html, css } from 'https://unpkg.com/wrapped-web-components/dist/index.esm.js';
+    
+    // Define a color picker component using the JavaScript API
+    define('color-picker', {
+      // HTML template with interpolation
+      template: html`
+        <div class="color-picker">
+          <h3>Color Picker</h3>
+          <div class="color-display" id="color-display"></div>
+          <div class="color-controls">
+            <div class="color-slider">
+              <label for="hue">Hue:</label>
+              <input type="range" id="hue" min="0" max="360" value="180" ${html.event('input', 'updateColor')}/>
+            </div>
+            <div class="color-slider">
+              <label for="saturation">Saturation:</label>
+              <input type="range" id="saturation" min="0" max="100" value="50" ${html.event('input', 'updateColor')}/>
+            </div>
+            <div class="color-slider">
+              <label for="lightness">Lightness:</label>
+              <input type="range" id="lightness" min="0" max="100" value="50" ${html.event('input', 'updateColor')}/>
+            </div>
+          </div>
+        </div>
+      `,
+
+      // CSS styles
+      styles: css`
+        .color-picker {
+          padding: 15px;
+          border: 1px solid #ddd;
+          border-radius: 4px;
+        }
+        
+        .color-display {
+          height: 80px;
+          border-radius: 4px;
+          margin-bottom: 15px;
+          background-color: hsl(180, 50%, 50%);
+        }
+        
+        .color-controls {
+          display: flex;
+          flex-direction: column;
+          gap: 10px;
+        }
+        
+        .color-slider {
+          display: flex;
+          align-items: center;
+        }
+        
+        .color-slider label {
+          width: 100px;
+        }
+        
+        .color-slider input {
+          flex: 1;
+        }
+      `,
+
+      // Component methods
+      methods: {
+        updateColor() {
+          const hue = this.shadowRoot.querySelector('#hue').value;
+          const saturation = this.shadowRoot.querySelector('#saturation').value;
+          const lightness = this.shadowRoot.querySelector('#lightness').value;
+          
+          const colorDisplay = this.shadowRoot.querySelector('#color-display');
+          colorDisplay.style.backgroundColor = `hsl(${hue}, ${saturation}%, ${lightness}%)`;
+        },
+        
+        // Lifecycle hooks
+        init() {
+          // Initialize the color display
+          this.updateColor();
+        }
+      }
+    });
+  </script>
+</body>
+</html>
