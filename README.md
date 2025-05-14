@@ -48,6 +48,12 @@ You can also use the library directly from a CDN:
 </script>
 ```
 
+Alternative: 
+- `https://cdn.jsdelivr.net/npm/wrapped-web-components/dist/index.esm.js`
+- `https://cdn.jsdelivr.net/npm/wrapped-web-components/dist/index.js`
+
+Can be useful if unpkg is down or not updated, also recommended
+
 ## Usage
 
 ### Method 1: Using Native HTML Files (Recommended)
