@@ -5,87 +5,49 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Wrapped Web Components - JavaScript API Example</title>
   <link rel="icon" href="./assets/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/atom-one-dark.min.css">
+  <link rel="stylesheet" href="./css/shared.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/languages/javascript.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/languages/xml.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/languages/css.min.js"></script>
+  <script src="./js/nav.js"></script>
   <style>
-    body {
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-      max-width: 800px;
-      margin: 0 auto;
-      padding: 20px;
-    }
-    
-    header {
-      display: flex;
-      align-items: center;
-      margin-bottom: 30px;
-    }
-    
-    .logo {
-      width: 80px;
-      height: 80px;
-      margin-right: 20px;
-    }
-    
     h1 {
-      margin: 0;
-      font-size: 1.8rem;
+      border-bottom: 1px solid #eee;
+      padding-bottom: 10px;
     }
-    
-    header p {
-      margin: 5px 0 0;
-      color: #666;
-    }
-    
-    .nav {
-      margin-bottom: 20px;
-    }
-    
-    .nav a {
-      margin-right: 10px;
-      display: inline-block;
-      padding: 8px 16px;
-      background-color: #e64c3c;
-      color: white;
-      text-decoration: none;
-      border-radius: 4px;
-      font-weight: bold;
-      transition: background-color 0.2s;
-    }
-    
-    .nav a:hover {
-      background-color: #d44235;
-    }
-    
+
     .example {
       margin-bottom: 30px;
       padding: 20px;
       border: 1px solid #ddd;
       border-radius: 4px;
     }
-    
+
     .example h2 {
       margin-top: 0;
-      border-bottom: 1px solid #eee;
-      padding-bottom: 10px;
     }
-    
+
+    .header {
+      display: flex;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    .logo {
+      width: 80px;
+      height: 80px;
+      margin-right: 20px;
+    }
+
     .demo {
       margin-top: 20px;
       padding: 20px;
       background-color: #f9f9f9;
       border-radius: 4px;
     }
-    
-    pre {
-      background-color: #f5f5f5;
-      padding: 15px;
-      border-radius: 4px;
-      overflow-x: auto;
-    }
-    
-    code {
-      font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
-    }
-    
+
     footer {
       margin-top: 40px;
       text-align: center;
@@ -94,32 +56,118 @@
       padding-top: 20px;
       border-top: 1px solid #eee;
     }
+
+    /* Source code tree styles */
+    .source-tree {
+      margin-top: 30px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      overflow: hidden;
+    }
+
+    .source-tree-header {
+      background-color: #f5f5f5;
+      padding: 10px 15px;
+      border-bottom: 1px solid #ddd;
+      font-weight: bold;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .source-tree-header:hover {
+      background-color: #eee;
+    }
+
+    .source-tree-content {
+      display: none;
+      padding: 15px;
+    }
+
+    .source-tree-content.active {
+      display: block;
+    }
+
+    .file-tree {
+      list-style-type: none;
+      padding-left: 0;
+    }
+
+    .file-tree li {
+      margin-bottom: 8px;
+    }
+
+    .file-tree a {
+      display: inline-block;
+      padding: 5px 10px;
+      text-decoration: none;
+      color: #333;
+      border-radius: 4px;
+    }
+
+    .file-tree a:hover {
+      background-color: #f0f0f0;
+    }
+
+    .file-tree a::before {
+      content: "📄 ";
+    }
+
+    .file-tree .folder::before {
+      content: "📁 ";
+    }
+
+    .file-content {
+      display: none;
+      margin-top: 15px;
+      padding: 15px;
+      background-color: #f5f5f5;
+      border-radius: 4px;
+    }
+
+    .file-content.active {
+      display: block;
+    }
   </style>
 </head>
 <body>
-  <header>
+  <div class="header">
     <img src="./assets/wwc-logo.svg" alt="WWC Logo" class="logo">
-    <div>
-      <h1>Wrapped Web Components</h1>
-      <p>JavaScript API Example</p>
-    </div>
-  </header>
+    <h1>Wrapped Web Components - JavaScript API</h1>
+  </div>
 
   <div class="nav">
-    <a href="index.html">Home</a>
-    <a href="examples.html">Native HTML Examples</a>
-    <a href="js-api-example.html">JavaScript API Example</a>
-    <a href="https://github.com/abbychau/wrapped-web-components">GitHub</a>
+    <!-- Navigation will be populated by nav.js -->
   </div>
 
   <div class="example">
     <h2>Using JavaScript API</h2>
     <p>This example demonstrates how to create a component using the JavaScript API with template literals.</p>
-    
-    <h3>Component Code:</h3>
-    <pre><code>import { define, html, css } from 'wrapped-web-components';
+
+    <div class="demo">
+      <h3>Color Picker Component</h3>
+      <color-picker></color-picker>
+    </div>
+
+    <div class="source-tree">
+      <div class="source-tree-header" onclick="toggleSourceTree()">
+        <span>View Source Code</span>
+        <span class="toggle-icon">▼</span>
+      </div>
+      <div class="source-tree-content" id="source-tree-content">
+        <ul class="file-tree">
+          <li><a href="#" onclick="showFile('color-picker-js'); return false;">color-picker.js</a></li>
+        </ul>
+
+        <div id="color-picker-js" class="file-content">
+          <h3>color-picker.js</h3>
+          <pre><code>import { define, html, css } from 'wrapped-web-components';
 
 define('color-picker', {
+  // Use Shadow DOM (Light DOM is the default)
+  useShadow: true,
+
   // HTML template with interpolation
   template: html`
     &lt;div class="color-picker"&gt;
@@ -139,6 +187,10 @@ define('color-picker', {
           &lt;input type="range" id="lightness" min="0" max="100" value="50" ${html.event('input', 'updateColor')}/&gt;
         &lt;/div&gt;
       &lt;/div&gt;
+      &lt;div class="color-value"&gt;
+        &lt;span&gt;Current Color: &lt;/span&gt;
+        &lt;code id="color-code"&gt;hsl(180, 50%, 50%)&lt;/code&gt;
+      &lt;/div&gt;
     &lt;/div&gt;
   `,
 
@@ -146,147 +198,297 @@ define('color-picker', {
   styles: css`
     .color-picker {
       padding: 15px;
-      border: 1px solid #ddd;
-      border-radius: 4px;
+      background-color: #f8f8f8;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      max-width: 400px;
     }
-    
+
     .color-display {
       height: 80px;
       border-radius: 4px;
       margin-bottom: 15px;
       background-color: hsl(180, 50%, 50%);
+      border: 1px solid #ddd;
     }
-    
+
     .color-controls {
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
+      margin-bottom: 15px;
     }
-    
+
     .color-slider {
+      margin-bottom: 10px;
       display: flex;
       align-items: center;
     }
-    
+
     .color-slider label {
       width: 100px;
+      font-weight: bold;
     }
-    
+
     .color-slider input {
       flex: 1;
     }
+
+    .color-value {
+      font-size: 14px;
+      margin-top: 10px;
+    }
+
+    code {
+      background-color: #eee;
+      padding: 2px 5px;
+      border-radius: 3px;
+      font-family: monospace;
+    }
   `,
+
+  // Component properties
+  properties: {
+    hue: {
+      default: 180,
+      reflect: true
+    },
+    saturation: {
+      default: 50,
+      reflect: true
+    },
+    lightness: {
+      default: 50,
+      reflect: true
+    }
+  },
 
   // Component methods
   methods: {
+
+
     updateColor() {
-      const hue = this.shadowRoot.querySelector('#hue').value;
-      const saturation = this.shadowRoot.querySelector('#saturation').value;
-      const lightness = this.shadowRoot.querySelector('#lightness').value;
-      
-      const colorDisplay = this.shadowRoot.querySelector('#color-display');
-      colorDisplay.style.backgroundColor = `hsl(${hue}, ${saturation}%, ${lightness}%)`;
+      const hueInput = this.getElement('#hue');
+      const saturationInput = this.getElement('#saturation');
+      const lightnessInput = this.getElement('#lightness');
+
+      this.hue = parseInt(hueInput.value);
+      this.saturation = parseInt(saturationInput.value);
+      this.lightness = parseInt(lightnessInput.value);
+
+      this.updateColorDisplay();
     },
-    
+
+    updateColorDisplay() {
+      const colorDisplay = this.getElement('#color-display');
+      const colorCode = this.getElement('#color-code');
+      const colorValue = `hsl(${this.hue}, ${this.saturation}%, ${this.lightness}%)`;
+
+      colorDisplay.style.backgroundColor = colorValue;
+      colorCode.textContent = colorValue;
+    },
+
     // Lifecycle hooks
     init() {
-      // Initialize the color display
-      this.updateColor();
+      console.log('Color picker initialized');
+    },
+
+    connected() {
+      console.log('Color picker connected to DOM');
+      this.updateColorDisplay();
+    },
+
+    disconnected() {
+      console.log('Color picker disconnected from DOM');
+    },
+
+    propertyChanged(name, oldValue, newValue) {
+      console.log(`Property ${name} changed from ${oldValue} to ${newValue}`);
+      if (['hue', 'saturation', 'lightness'].includes(name)) {
+        this.updateColorDisplay();
+      }
     }
   }
 });</code></pre>
-    
-    <h3>Live Demo:</h3>
-    <div class="demo">
-      <color-picker></color-picker>
+        </div>
+      </div>
     </div>
   </div>
 
   <footer>
     <p>Wrapped Web Components (WWC) is released under the MIT License</p>
-    <p><a href="https://github.com/abbychau/wrapped-web-components">GitHub Repository</a></p>
   </footer>
 
+  <script>
+    function toggleSourceTree() {
+      const content = document.getElementById('source-tree-content');
+      content.classList.toggle('active');
+
+      const toggleIcon = document.querySelector('.toggle-icon');
+      toggleIcon.textContent = content.classList.contains('active') ? '▲' : '▼';
+    }
+
+    function showFile(fileId) {
+      // Hide all file contents
+      const fileContents = document.querySelectorAll('.file-content');
+      fileContents.forEach(content => {
+        content.classList.remove('active');
+      });
+
+      // Show the selected file
+      const selectedFile = document.getElementById(fileId);
+      if (selectedFile) {
+        selectedFile.classList.add('active');
+      }
+    }
+  </script>
+
   <script type="module">
-    // Import the library from CDN
-    import { define, html, css } from 'https://unpkg.com/wrapped-web-components/dist/index.esm.js';
-    
-    // Define a color picker component using the JavaScript API
-    define('color-picker', {
-      // HTML template with interpolation
-      template: html`
-        <div class="color-picker">
-          <h3>Color Picker</h3>
-          <div class="color-display" id="color-display"></div>
-          <div class="color-controls">
-            <div class="color-slider">
-              <label for="hue">Hue:</label>
-              <input type="range" id="hue" min="0" max="360" value="180" ${html.event('input', 'updateColor')}/>
+    // Import the library (uses local dist in development, CDN in production)
+    const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+    const importPath = isLocalhost ? './dist/index.esm.js' : 'https://unpkg.com/wrapped-web-components/dist/index.esm.js';
+
+    // Use dynamic import() instead of static import
+    import(importPath).then(module => {
+      const { define, html, css } = module;
+
+      // Define a color picker component using the JavaScript API
+      define('color-picker', {
+        // Use Shadow DOM (Light DOM is the default)
+        useShadow: true,
+
+        // HTML template with interpolation
+        template: html`
+          <div class="color-picker">
+            <h3>Color Picker</h3>
+            <div class="color-display" id="color-display"></div>
+            <div class="color-controls">
+              <div class="color-slider">
+                <label for="hue">Hue:</label>
+                <input type="range" id="hue" min="0" max="360" value="180" ${html.event('input', 'updateColor')}/>
+              </div>
+              <div class="color-slider">
+                <label for="saturation">Saturation:</label>
+                <input type="range" id="saturation" min="0" max="100" value="50" ${html.event('input', 'updateColor')}/>
+              </div>
+              <div class="color-slider">
+                <label for="lightness">Lightness:</label>
+                <input type="range" id="lightness" min="0" max="100" value="50" ${html.event('input', 'updateColor')}/>
+              </div>
             </div>
-            <div class="color-slider">
-              <label for="saturation">Saturation:</label>
-              <input type="range" id="saturation" min="0" max="100" value="50" ${html.event('input', 'updateColor')}/>
-            </div>
-            <div class="color-slider">
-              <label for="lightness">Lightness:</label>
-              <input type="range" id="lightness" min="0" max="100" value="50" ${html.event('input', 'updateColor')}/>
+            <div class="color-value">
+              <span>Current Color: </span>
+              <code id="color-code">hsl(180, 50%, 50%)</code>
             </div>
           </div>
-        </div>
-      `,
+        `,
 
-      // CSS styles
-      styles: css`
-        .color-picker {
-          padding: 15px;
-          border: 1px solid #ddd;
-          border-radius: 4px;
-        }
-        
-        .color-display {
-          height: 80px;
-          border-radius: 4px;
-          margin-bottom: 15px;
-          background-color: hsl(180, 50%, 50%);
-        }
-        
-        .color-controls {
-          display: flex;
-          flex-direction: column;
-          gap: 10px;
-        }
-        
-        .color-slider {
-          display: flex;
-          align-items: center;
-        }
-        
-        .color-slider label {
-          width: 100px;
-        }
-        
-        .color-slider input {
-          flex: 1;
-        }
-      `,
+        // CSS styles
+        styles: css`
+          .color-picker {
+            padding: 15px;
+            background-color: #f8f8f8;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            max-width: 400px;
+          }
 
-      // Component methods
-      methods: {
-        updateColor() {
-          const hue = this.shadowRoot.querySelector('#hue').value;
-          const saturation = this.shadowRoot.querySelector('#saturation').value;
-          const lightness = this.shadowRoot.querySelector('#lightness').value;
-          
-          const colorDisplay = this.shadowRoot.querySelector('#color-display');
-          colorDisplay.style.backgroundColor = `hsl(${hue}, ${saturation}%, ${lightness}%)`;
+          .color-display {
+            height: 80px;
+            border-radius: 4px;
+            margin-bottom: 15px;
+            background-color: hsl(180, 50%, 50%);
+            border: 1px solid #ddd;
+          }
+
+          .color-controls {
+            margin-bottom: 15px;
+          }
+
+          .color-slider {
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+          }
+
+          .color-slider label {
+            width: 100px;
+            font-weight: bold;
+          }
+
+          .color-slider input {
+            flex: 1;
+          }
+
+          .color-value {
+            font-size: 14px;
+            margin-top: 10px;
+          }
+
+          code {
+            background-color: #eee;
+            padding: 2px 5px;
+            border-radius: 3px;
+            font-family: monospace;
+          }
+        `,
+
+        // Component properties
+        properties: {
+          hue: {
+            default: 180,
+            reflect: true
+          },
+          saturation: {
+            default: 50,
+            reflect: true
+          },
+          lightness: {
+            default: 50,
+            reflect: true
+          }
         },
-        
-        // Lifecycle hooks
-        init() {
-          // Initialize the color display
-          this.updateColor();
+
+        // Component methods
+        methods: {
+
+
+          updateColor() {
+            const hueInput = this.getElement('#hue');
+            const saturationInput = this.getElement('#saturation');
+            const lightnessInput = this.getElement('#lightness');
+
+            this.hue = parseInt(hueInput.value);
+            this.saturation = parseInt(saturationInput.value);
+            this.lightness = parseInt(lightnessInput.value);
+
+            this.updateColorDisplay();
+          },
+
+          updateColorDisplay() {
+            const colorDisplay = this.getElement('#color-display');
+            const colorCode = this.getElement('#color-code');
+            const colorValue = `hsl(${this.hue}, ${this.saturation}%, ${this.lightness}%)`;
+
+            colorDisplay.style.backgroundColor = colorValue;
+            colorCode.textContent = colorValue;
+          },
+
+          // Lifecycle hooks
+          init() {
+            // Initialize the color display
+            this.updateColorDisplay();
+          }
         }
-      }
+      });
+    }).catch(error => {
+      console.error('Error importing module:', error);
+    });
+  </script>
+
+  <script>
+    // Initialize syntax highlighting
+    document.addEventListener('DOMContentLoaded', (event) => {
+      document.querySelectorAll('pre code').forEach((block) => {
+        hljs.highlightBlock(block);
+      });
     });
   </script>
 </body>

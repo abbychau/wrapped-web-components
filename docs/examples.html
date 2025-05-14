@@ -5,14 +5,14 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Wrapped Web Components - Examples</title>
   <link rel="icon" href="./assets/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/atom-one-dark.min.css">
+  <link rel="stylesheet" href="./css/shared.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/languages/javascript.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/languages/xml.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/languages/css.min.js"></script>
+  <script src="./js/nav.js"></script>
   <style>
-    body {
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-      max-width: 800px;
-      margin: 0 auto;
-      padding: 20px;
-    }
-
     h1 {
       border-bottom: 1px solid #eee;
       padding-bottom: 10px;
@@ -27,37 +27,6 @@
 
     .example h2 {
       margin-top: 0;
-    }
-
-    pre {
-      background-color: #f5f5f5;
-      padding: 10px;
-      border-radius: 4px;
-      overflow-x: auto;
-    }
-
-    code {
-      font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
-    }
-
-    .nav {
-      margin-bottom: 20px;
-    }
-
-    .nav a {
-      margin-right: 10px;
-      display: inline-block;
-      padding: 8px 16px;
-      background-color: #e64c3c;
-      color: white;
-      text-decoration: none;
-      border-radius: 4px;
-      font-weight: bold;
-      transition: background-color 0.2s;
-    }
-
-    .nav a:hover {
-      background-color: #d44235;
     }
 
     .header {
@@ -87,20 +56,102 @@
       padding-top: 20px;
       border-top: 1px solid #eee;
     }
+
+    /* Source code tree styles */
+    .source-tree {
+      margin-top: 30px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      overflow: hidden;
+    }
+
+    .source-tree-header {
+      background-color: #f5f5f5;
+      padding: 10px 15px;
+      border-bottom: 1px solid #ddd;
+      font-weight: bold;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .source-tree-header:hover {
+      background-color: #eee;
+    }
+
+    .source-tree-content {
+      display: none;
+      padding: 15px;
+    }
+
+    .source-tree-content.active {
+      display: block;
+    }
+
+    .file-tree {
+      list-style-type: none;
+      padding-left: 0;
+    }
+
+    .file-tree li {
+      margin-bottom: 8px;
+    }
+
+    .file-tree a {
+      display: inline-block;
+      padding: 5px 10px;
+      text-decoration: none;
+      color: #333;
+      border-radius: 4px;
+    }
+
+    .file-tree a:hover {
+      background-color: #f0f0f0;
+    }
+
+    .file-tree a::before {
+      content: "📄 ";
+    }
+
+    .file-tree .folder::before {
+      content: "📁 ";
+    }
+
+    .file-viewer {
+      margin-top: 15px;
+      padding: 15px;
+      background-color: #f5f5f5;
+      border-radius: 4px;
+    }
+    
+    .file-title {
+      margin-top: 0;
+      margin-bottom: 10px;
+      font-size: 1.2rem;
+    }
+    
+    .file-loading {
+      display: none;
+      padding: 10px;
+      text-align: center;
+      color: #666;
+      font-style: italic;
+    }
+    
+    .file-loading.active {
+      display: block;
+    }
   </style>
 </head>
 <body>
-
   <div class="header">
     <img src="./assets/wwc-logo.svg" alt="WWC Logo" class="logo">
     <h1>Wrapped Web Components - Examples</h1>
   </div>
 
   <div class="nav">
-    <a href="index.html">Home</a>
-    <a href="examples.html">Native HTML Examples</a>
-    <a href="js-api-example.html">JavaScript API Example</a>
-    <a href="https://github.com/abbychau/wrapped-web-components">GitHub</a>
+    <!-- Navigation will be populated by nav.js -->
   </div>
 
   <div class="example">
@@ -118,65 +169,132 @@
       <todo-list></todo-list>
     </div>
 
-    <h3>How It Works</h3>
-    <p>Components are defined in separate HTML files with native HTML, CSS, and JS syntax:</p>
-    
-    <pre><code>&lt;!-- my-counter.html --&gt;
-&lt;template&gt;
-  &lt;div class="counter"&gt;
-    &lt;h3&gt;Counter: &lt;span id="count-value"&gt;0&lt;/span&gt;&lt;/h3&gt;
-    &lt;button id="increment-btn"&gt;Increment&lt;/button&gt;
-    &lt;button id="decrement-btn"&gt;Decrement&lt;/button&gt;
-  &lt;/div&gt;
-&lt;/template&gt;
+    <div class="source-tree">
+      <div class="source-tree-header" onclick="toggleSourceTree()">
+        <span>View Source Code</span>
+        <span class="toggle-icon">▼</span>
+      </div>
+      <div class="source-tree-content" id="source-tree-content">
+        <ul class="file-tree">
+          <li><a href="#" onclick="showFile('my-counter', 'html'); return false;">my-counter.html</a></li>
+          <li><a href="#" onclick="showFile('light-dom-component', 'html'); return false;">light-dom-component.html</a></li>
+          <li><a href="#" onclick="showFile('todo-list', 'html'); return false;">todo-list.html</a></li>
+          <li><a href="#" onclick="showFile('register-example', 'javascript'); return false;">register-example.js</a></li>
+        </ul>
 
-&lt;style&gt;
-  .counter {
-    padding: 15px;
-    background-color: #f0f0f0;
-    border-radius: 4px;
-  }
-  /* More styles... */
-&lt;/style&gt;
-
-&lt;script&gt;
-  // Export component configuration
-  exportDefault({
-    properties: {
-      count: {
-        default: 0,
-        reflect: true
-      }
-    },
-    methods: {
-      increment() { /* ... */ },
-      decrement() { /* ... */ }
-    },
-    init() { /* ... */ }
-  });
-&lt;/script&gt;</code></pre>
-
-    <p>Then register the component:</p>
-    
-    <pre><code>import { register } from 'wrapped-web-components';
-
-// Register component from HTML file
-register('my-counter', './components/my-counter.html');</code></pre>
+        <div class="file-viewer">
+          <h3 class="file-title">Select a file to view</h3>
+          <div class="file-loading">Loading...</div>
+          <pre><code></code></pre>
+        </div>
+      </div>
+    </div>
   </div>
 
   <footer>
     <p>Wrapped Web Components (WWC) is released under the MIT License</p>
-    <p><a href="https://github.com/abbychau/wrapped-web-components">GitHub Repository</a></p>
   </footer>
 
-  <script type="module">
-    // Import the library from CDN
-    import { register } from 'https://unpkg.com/wrapped-web-components/dist/index.esm.js';
+  <script>
+    // File paths mapping
+    const filePaths = {
+      'my-counter': './components/my-counter.html',
+      'light-dom-component': './components/light-dom-component.html',
+      'todo-list': './components/todo-list.html',
+      'register-example': './js/register-example.js'
+    };
     
-    // Register components from HTML files
-    register('my-counter', './components/my-counter.html');
-    register('light-dom-component', './components/light-dom-component.html');
-    register('todo-list', './components/todo-list.html');
+    // Cache for loaded files
+    const fileCache = {};
+    
+    function toggleSourceTree() {
+      const content = document.getElementById('source-tree-content');
+      content.classList.toggle('active');
+
+      const toggleIcon = document.querySelector('.toggle-icon');
+      toggleIcon.textContent = content.classList.contains('active') ? '▲' : '▼';
+    }
+
+    function showFile(fileId, language) {
+      // Update the file title
+      const fileTitle = document.querySelector('.file-title');
+      const fileName = fileId === 'register-example' ? 'register-example.js' : `${fileId}.html`;
+      fileTitle.textContent = fileName;
+      
+      // Get the code element and loading indicator
+      const fileViewer = document.querySelector('.file-viewer');
+      const loadingIndicator = fileViewer.querySelector('.file-loading');
+      const codeElement = fileViewer.querySelector('pre code');
+      
+      // Set the language class
+      codeElement.className = `language-${language}`;
+      
+      // If file is not in cache, load it
+      if (!fileCache[fileId]) {
+        loadingIndicator.classList.add('active');
+        
+        // Fetch the file content
+        fetch(filePaths[fileId])
+          .then(response => {
+            if (!response.ok) {
+              throw new Error(`Failed to load file: ${response.status} ${response.statusText}`);
+            }
+            return response.text();
+          })
+          .then(content => {
+            // Escape HTML entities for display
+            const escapedContent = content; //no need to escape as we are using <code> element
+            
+            // Cache the content
+            fileCache[fileId] = escapedContent;
+            
+            // Update the code element
+            codeElement.textContent = escapedContent;
+            
+            // Apply syntax highlighting
+            hljs.highlightBlock(codeElement);
+            
+            // Hide loading indicator
+            loadingIndicator.classList.remove('active');
+          })
+          .catch(error => {
+            console.error('Error loading file:', error);
+            codeElement.textContent = `Error loading file: ${error.message}`;
+            loadingIndicator.classList.remove('active');
+          });
+      } else {
+        // Use cached content
+        codeElement.textContent = fileCache[fileId];
+        hljs.highlightBlock(codeElement);
+      }
+    }
+  </script>
+
+  <script type="module">
+    // Import the library (uses local dist in development, CDN in production)
+    const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+    const importPath = isLocalhost ? './dist/index.esm.js' : 'https://unpkg.com/wrapped-web-components/dist/index.esm.js';
+
+    // Use dynamic import() instead of static import
+    import(importPath).then(module => {
+      const { register } = module;
+
+      // Register components from HTML files
+      register('my-counter', './components/my-counter.html');
+      register('light-dom-component', './components/light-dom-component.html');
+      register('todo-list', './components/todo-list.html');
+    }).catch(error => {
+      console.error('Error importing module:', error);
+    });
+  </script>
+
+  <script>
+    // Initialize syntax highlighting
+    document.addEventListener('DOMContentLoaded', (event) => {
+      document.querySelectorAll('pre code').forEach((block) => {
+        hljs.highlightBlock(block);
+      });
+    });
   </script>
 </body>
 </html>

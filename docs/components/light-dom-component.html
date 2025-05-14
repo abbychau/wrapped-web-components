@@ -1,4 +1,4 @@
-<!-- 
+<!--
   light-dom-component.html
   A component that doesn't use Shadow DOM
 -->
@@ -18,7 +18,7 @@
     border: 1px solid #91d5ff;
     border-radius: 4px;
   }
-  
+
   button {
     padding: 5px 10px;
     background-color: #1890ff;
@@ -27,7 +27,7 @@
     border-radius: 4px;
     cursor: pointer;
   }
-  
+
   button:hover {
     background-color: #40a9ff;
   }
@@ -36,20 +36,19 @@
 <script>
   // Export component configuration
   exportDefault({
-    // Don't use Shadow DOM
-    useShadow: false,
-    
+    // Light DOM is now the default, so we don't need to specify useShadow: false
+
     // Methods
     methods: {
       handleClick() {
         alert('Button clicked!');
       }
     },
-    
+
     // Lifecycle hooks
     init() {
       console.log('Light DOM component initialized');
-      
+
       // Add event listener
       const alertBtn = this.querySelector('#alert-btn');
       if (alertBtn) {

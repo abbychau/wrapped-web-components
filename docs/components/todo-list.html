@@ -25,10 +25,11 @@
 
 <style>
   .todo-container {
-    padding: 15px;
-    background-color: #f9f9f9;
-    border-radius: 4px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    margin: 30px auto;
+    background-color: white;
+    border-radius: 1em;
+    
   }
 
   .add-todo {
@@ -112,10 +113,13 @@
   #clear-completed {
     background: none;
     border: none;
-    color: #4CAF50;
+    color: white;
+    padding:3px;
+    background-color: #f44336;
     cursor: pointer;
     font-size: 14px;
-    padding: 0;
+    border-radius: 4px;
+    
   }
 
   #clear-completed:hover {
@@ -136,8 +140,10 @@
 
     // Methods
     methods: {
+
+
       addTodo() {
-        const input = this.shadowRoot.querySelector('#new-todo');
+        const input = this.getElement('#new-todo');
         const text = input.value.trim();
 
         // Make sure todos is an array
@@ -201,7 +207,7 @@
       },
 
       renderTodos() {
-        const todoList = this.shadowRoot.querySelector('#todo-list');
+        const todoList = this.getElement('#todo-list');
         todoList.innerHTML = '';
 
         // Make sure todos is an array before using forEach
@@ -240,13 +246,13 @@
         // Make sure todos is an array before using filter
         if (!Array.isArray(this.todos)) {
           this._props.todos = [];
-          this.shadowRoot.querySelector('#items-left').textContent = '0 items left';
+          this.getElement('#items-left').textContent = '0 items left';
           return;
         }
 
         const itemsLeft = this.todos.filter(todo => !todo.completed).length;
         const itemsLeftText = `${itemsLeft} item${itemsLeft !== 1 ? 's' : ''} left`;
-        this.shadowRoot.querySelector('#items-left').textContent = itemsLeftText;
+        this.getElement('#items-left').textContent = itemsLeftText;
       }
     },
 
@@ -260,9 +266,9 @@
       }
 
       // Add event listeners
-      const addBtn = this.shadowRoot.querySelector('#add-btn');
-      const newTodoInput = this.shadowRoot.querySelector('#new-todo');
-      const clearCompletedBtn = this.shadowRoot.querySelector('#clear-completed');
+      const addBtn = this.getElement('#add-btn');
+      const newTodoInput = this.getElement('#new-todo');
+      const clearCompletedBtn = this.getElement('#clear-completed');
 
       addBtn.addEventListener('click', () => this.addTodo());
 

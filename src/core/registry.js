@@ -40,27 +40,27 @@ export async function register(tagName, options) {
 function registerComponent(tagName, options) {
   // Create a new component class that extends the base Component
   class CustomComponent extends Component {}
-  
+
   // Add static properties
   CustomComponent.template = options.template || '';
   CustomComponent.styles = options.style || '';
-  CustomComponent.useShadow = options.script?.useShadow !== false;
+  CustomComponent.useShadow = options.script?.useShadow === true;
   CustomComponent.observedAttributes = options.script?.observedAttributes || [];
-  
+
   // Add methods to the prototype
   if (options.script?.methods) {
     Object.entries(options.script.methods).forEach(([name, method]) => {
       CustomComponent.prototype[name] = method;
     });
   }
-  
+
   // Add lifecycle hooks
   ['init', 'connected', 'disconnected', 'attributeChanged', 'propertyChanged'].forEach(hook => {
     if (typeof options.script?.[hook] === 'function') {
       CustomComponent.prototype[hook] = options.script[hook];
     }
   });
-  
+
   // Add property getters and setters
   if (options.script?.properties) {
     Object.entries(options.script.properties).forEach(([name, config]) => {
@@ -72,11 +72,11 @@ function registerComponent(tagName, options) {
         set(value) {
           const oldValue = this._props[name];
           this._props[name] = value;
-          
+
           // Reflect to attribute if specified
           if (config.reflect) {
             const attrName = name.replace(/([A-Z])/g, '-$1').toLowerCase();
-            
+
             if (value === null || value === undefined) {
               this.removeAttribute(attrName);
             } else if (typeof value === 'boolean') {
@@ -89,7 +89,7 @@ function registerComponent(tagName, options) {
               this.setAttribute(attrName, value);
             }
           }
-          
+
           // Call property changed callback if it exists
           if (typeof this.propertyChanged === 'function' && oldValue !== value) {
             this.propertyChanged(name, oldValue, value);
@@ -98,7 +98,7 @@ function registerComponent(tagName, options) {
         configurable: true,
         enumerable: true
       });
-      
+
       // Add to observed attributes if reflective
       if (config.reflect && !CustomComponent.observedAttributes.includes(name)) {
         const attrName = name.replace(/([A-Z])/g, '-$1').toLowerCase();
@@ -106,13 +106,13 @@ function registerComponent(tagName, options) {
       }
     });
   }
-  
+
   // Define the custom element
   customElements.define(tagName, CustomComponent);
-  
+
   // Store the component in the registry
   registry.set(tagName, CustomComponent);
-  
+
   return CustomComponent;
 }
 

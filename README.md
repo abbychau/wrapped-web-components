@@ -105,8 +105,10 @@ Create a component in a separate HTML file with native HTML, CSS, and JS:
         this.updateCounter();
       },
 
+
+
       updateCounter() {
-        const countElement = this.shadowRoot.querySelector('#count-value');
+        const countElement = this.getElement('#count-value');
         if (countElement) {
           countElement.textContent = this.count;
         }
@@ -116,8 +118,8 @@ Create a component in a separate HTML file with native HTML, CSS, and JS:
     // Lifecycle hooks
     init() {
       // Add event listeners
-      const incrementBtn = this.shadowRoot.querySelector('#increment-btn');
-      const decrementBtn = this.shadowRoot.querySelector('#decrement-btn');
+      const incrementBtn = this.getElement('#increment-btn');
+      const decrementBtn = this.getElement('#decrement-btn');
 
       if (incrementBtn) {
         incrementBtn.addEventListener('click', () => this.increment());
@@ -217,14 +219,14 @@ define('my-counter', {
 });
 ```
 
-### Component without Shadow DOM
+### Component with Shadow DOM
 
 ```javascript
-define('light-dom-component', {
+define('shadow-dom-component', {
   template: html`
     <div class="container">
-      <h3>Light DOM Component</h3>
-      <p>This component doesn't use Shadow DOM.</p>
+      <h3>Shadow DOM Component</h3>
+      <p>This component uses Shadow DOM for style encapsulation.</p>
       <button ${html.event('click', 'handleClick')}>Click me</button>
     </div>
   `,
@@ -236,9 +238,6 @@ define('light-dom-component', {
       border: 1px solid #91d5ff;
     }
   `,
-
-  // Don't use Shadow DOM
-  useShadow: false,
 
   methods: {
     handleClick() {
@@ -282,7 +281,7 @@ register('my-counter', { template, style, script });
   // Export component configuration
   exportDefault({
     // Component configuration
-    useShadow: true,
+    useShadow: true, // Optional: only needed if you want Shadow DOM (Light DOM is default)
     properties: { /* ... */ },
     methods: { /* ... */ },
 
@@ -304,7 +303,7 @@ Defines a new custom element.
 - `options` (object): Configuration options for the component
   - `template` (string|function): HTML template for the component
   - `styles` (string): CSS styles for the component
-  - `useShadow` (boolean): Whether to use Shadow DOM (default: true)
+  - `useShadow` (boolean): Whether to use Shadow DOM (default: false)
   - `observedAttributes` (array): Attributes to observe for changes
   - `properties` (object): Component properties with configuration
   - `methods` (object): Methods to add to the component
@@ -344,6 +343,20 @@ css`
 - `disconnected()`: Called when the component is disconnected from the DOM
 - `propertyChanged(name, oldValue, newValue)`: Called when a property changes
 - `attributeChanged(name, oldValue, newValue)`: Called when an observed attribute changes
+
+## Core Helper Methods
+
+The library provides built-in helper methods that work with both Shadow DOM and Light DOM:
+
+- `getElement(selector)`: Queries a single element using the provided selector
+- `getAllElements(selector)`: Queries all elements matching the provided selector
+
+Example usage:
+```javascript
+// Works with both Shadow DOM and Light DOM
+const button = this.getElement('#my-button');
+const items = this.getAllElements('.item');
+```
 
 ## License
 

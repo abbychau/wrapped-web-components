@@ -7,8 +7,8 @@ export class Component extends HTMLElement {
   constructor() {
     super();
 
-    // Create shadow DOM by default (can be overridden)
-    if (this.constructor.useShadow !== false) {
+    // Create shadow DOM only if explicitly requested
+    if (this.constructor.useShadow === true) {
       this.attachShadow({ mode: 'open' });
     }
 
@@ -54,19 +54,33 @@ export class Component extends HTMLElement {
       this.shadowRoot.appendChild(styleElement);
     } else {
       // If not using shadow DOM, add scoped styles
-      // This is a simplified approach - in a real implementation,
-      // you might want to use a more sophisticated scoping mechanism
       const styleElement = document.createElement('style');
 
       // Add a unique attribute to the component
       const scopeAttr = `data-${this.tagName.toLowerCase()}-${Math.random().toString(36).substring(2, 8)}`;
       this.setAttribute(scopeAttr, '');
 
-      // Scope all styles with the unique attribute
-      const scopedStyles = styles.replace(/([^{]*){/g, (match, selector) => {
+      // Process CSS to scope all selectors with the unique attribute
+      let scopedStyles = '';
+
+      // Split the CSS into rule blocks
+      const cssRules = styles.split('}');
+
+      for (let rule of cssRules) {
+        if (!rule.trim()) continue;
+
+        // Find the position of the opening brace
+        const braceIndex = rule.indexOf('{');
+        if (braceIndex === -1) continue;
+
+        // Extract selector and declarations
+        const selector = rule.substring(0, braceIndex).trim();
+        const declarations = rule.substring(braceIndex + 1).trim();
+
         // Skip @-rules like @media, @keyframes, etc.
-        if (selector.trim().startsWith('@')) {
-          return match;
+        if (selector.startsWith('@')) {
+          scopedStyles += `${rule}}`;
+          continue;
         }
 
         // Add scope to each selector
@@ -75,8 +89,9 @@ export class Component extends HTMLElement {
           .map(s => `[${scopeAttr}] ${s.trim()}`)
           .join(', ');
 
-        return `${scopedSelector} {`;
-      });
+        // Combine the scoped selector with the declarations
+        scopedStyles += `${scopedSelector} {${declarations}}`;
+      }
 
       styleElement.textContent = scopedStyles;
       document.head.appendChild(styleElement);
@@ -199,6 +214,28 @@ export class Component extends HTMLElement {
       // If parsing fails, return the value as a string
       return value;
     }
+  }
+
+  /**
+   * Query an element that works with both Shadow DOM and Light DOM
+   * @param {string} selector - CSS selector to query
+   * @returns {Element|null} - The first element matching the selector or null
+   */
+  getElement(selector) {
+    return this.shadowRoot
+      ? this.shadowRoot.querySelector(selector)
+      : this.querySelector(selector);
+  }
+
+  /**
+   * Query all elements that work with both Shadow DOM and Light DOM
+   * @param {string} selector - CSS selector to query
+   * @returns {NodeList} - All elements matching the selector
+   */
+  getAllElements(selector) {
+    return this.shadowRoot
+      ? this.shadowRoot.querySelectorAll(selector)
+      : this.querySelectorAll(selector);
   }
 
   /**

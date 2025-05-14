@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Wrapped Web Components - API Documentation</title>
+  <link rel="icon" href="./assets/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/atom-one-dark.min.css">
+  <link rel="stylesheet" href="./css/shared.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/languages/javascript.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/languages/xml.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/languages/css.min.js"></script>
+  <script src="./js/nav.js"></script>
+  <style>
+    header {
+      margin-bottom: 40px;
+    }
+
+    .logo {
+      width: 80px;
+      height: 80px;
+      margin-right: 20px;
+    }
+
+    h1 {
+      margin-bottom: 10px;
+      border-bottom: 1px solid #eee;
+      padding-bottom: 10px;
+    }
+
+    h2 {
+      margin-top: 40px;
+      border-bottom: 1px solid #eee;
+      padding-bottom: 8px;
+    }
+
+    h3 {
+      margin-top: 25px;
+    }
+
+    .header {
+      display: flex;
+      align-items: center;
+    }
+
+    .api-section {
+      margin-bottom: 30px;
+      padding: 20px;
+      border: 1px solid #eee;
+      border-radius: 4px;
+    }
+
+    .api-section h3 {
+      margin-top: 0;
+    }
+
+    .parameter {
+      margin-left: 20px;
+      margin-bottom: 15px;
+    }
+
+    .parameter-name {
+      font-weight: bold;
+      font-family: monospace;
+    }
+
+    .parameter-type {
+      color: #666;
+      font-style: italic;
+    }
+
+    .parameter-description {
+      margin-top: 5px;
+    }
+
+    .method-signature {
+      font-family: monospace;
+      background-color: #f5f5f5;
+      padding: 8px;
+      border-radius: 4px;
+      margin-bottom: 15px;
+    }
+
+    footer {
+      margin-top: 60px;
+      text-align: center;
+      color: #666;
+      font-size: 0.9rem;
+      padding-top: 20px;
+      border-top: 1px solid #eee;
+    }
+
+    .toc {
+      background-color: #f9f9f9;
+      padding: 15px;
+      border-radius: 4px;
+      margin-bottom: 30px;
+    }
+
+    .toc ul {
+      margin: 0;
+      padding-left: 20px;
+    }
+
+    .toc li {
+      margin-bottom: 5px;
+      list-style-type:disc
+    }
+
+    .toc a {
+      text-decoration: none;
+      color: #007BFF;
+    }
+    .toc a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <img src="./assets/wwc-logo.svg" alt="WWC Logo" class="logo">
+    <h1>API Documentation</h1>
+  </div>
+
+  <div class="nav">
+    <!-- Navigation will be populated by nav.js -->
+  </div>
+
+  <div class="toc">
+    <h2 style="margin-top: 0;">Table of Contents</h2>
+    <ul>
+      <li><a href="#native-html-api">Native HTML Components API</a></li>
+      <li><a href="#javascript-api">JavaScript API</a></li>
+      <li><a href="#lifecycle-hooks">Lifecycle Hooks</a></li>
+      <li><a href="#core-methods">Core Helper Methods</a></li>
+      <li><a href="#component-configuration">Component Configuration</a></li>
+    </ul>
+  </div>
+
+  <section id="native-html-api">
+    <h2>Native HTML Components API</h2>
+
+    <div class="api-section">
+      <h3>register(tagName, urlOrOptions)</h3>
+      <p>Registers a new custom element from an HTML file or options object.</p>
+
+      <div class="parameter">
+        <div class="parameter-name">tagName</div>
+        <div class="parameter-type">string</div>
+        <div class="parameter-description">The tag name for the custom element</div>
+      </div>
+
+      <div class="parameter">
+        <div class="parameter-name">urlOrOptions</div>
+        <div class="parameter-type">string | object</div>
+        <div class="parameter-description">URL to an HTML file or configuration options</div>
+      </div>
+
+      <h4>Example:</h4>
+      <pre><code class="javascript">// Register from HTML file
+register('my-counter', './components/my-counter.html');
+
+// Register from options object
+register('my-counter', { template, style, script });</code></pre>
+    </div>
+
+    <div class="api-section">
+      <h3>HTML Component File Structure</h3>
+      <p>Components are defined in HTML files with three main sections:</p>
+
+      <pre><code class="html">&lt;!-- my-component.html --&gt;
+&lt;template&gt;
+  &lt;!-- HTML template goes here --&gt;
+&lt;/template&gt;
+
+&lt;style&gt;
+  /* CSS styles go here */
+&lt;/style&gt;
+
+&lt;script&gt;
+  // Export component configuration
+  exportDefault({
+    // Component configuration
+    useShadow: true, // Optional: only needed if you want Shadow DOM (Light DOM is default)
+    properties: { /* ... */ },
+    methods: { /* ... */ },
+
+    // Lifecycle hooks
+    init() { /* ... */ },
+    connected() { /* ... */ },
+    disconnected() { /* ... */ }
+  });
+&lt;/script&gt;</code></pre>
+    </div>
+  </section>
+
+  <section id="javascript-api">
+    <h2>JavaScript API</h2>
+
+    <div class="api-section">
+      <h3>define(tagName, options)</h3>
+      <p>Defines a new custom element using JavaScript.</p>
+
+      <div class="parameter">
+        <div class="parameter-name">tagName</div>
+        <div class="parameter-type">string</div>
+        <div class="parameter-description">The tag name for the custom element</div>
+      </div>
+
+      <div class="parameter">
+        <div class="parameter-name">options</div>
+        <div class="parameter-type">object</div>
+        <div class="parameter-description">Configuration options for the component</div>
+      </div>
+
+      <h4>Example:</h4>
+      <pre><code class="javascript">define('my-counter', {
+  // HTML template with interpolation
+  template: html`
+    &lt;div class="counter"&gt;
+      &lt;h3&gt;Counter: &lt;span&gt;${count}&lt;/span&gt;&lt;/h3&gt;
+      &lt;button ${html.event('click', 'increment')}&gt;Increment&lt;/button&gt;
+      &lt;button ${html.event('click', 'decrement')}&gt;Decrement&lt;/button&gt;
+    &lt;/div&gt;
+  `,
+
+  // CSS styles
+  styles: css`
+    .counter {
+      padding: 15px;
+      background-color: #f0f0f0;
+      border-radius: 4px;
+    }
+  `,
+
+  // Component properties
+  properties: {
+    count: {
+      default: 0,
+      reflect: true
+    }
+  },
+
+  // Component methods
+  methods: {
+    increment() {
+      this.count++;
+    },
+    decrement() {
+      this.count--;
+    }
+  }
+});</code></pre>
+    </div>
+
+    <div class="api-section">
+      <h3>html</h3>
+      <p>Template tag function for creating HTML templates with interpolation.</p>
+
+      <h4>Example:</h4>
+      <pre><code class="javascript">html`&lt;div&gt;${propertyName}&lt;/div&gt;`</code></pre>
+
+      <h3>html.event(eventName, handlerName)</h3>
+      <p>Creates an event binding for use in templates.</p>
+
+      <div class="parameter">
+        <div class="parameter-name">eventName</div>
+        <div class="parameter-type">string</div>
+        <div class="parameter-description">The name of the event (e.g., 'click')</div>
+      </div>
+
+      <div class="parameter">
+        <div class="parameter-name">handlerName</div>
+        <div class="parameter-type">string</div>
+        <div class="parameter-description">The name of the handler method on the component</div>
+      </div>
+
+      <h4>Example:</h4>
+      <pre><code class="javascript">html`&lt;button ${html.event('click', 'handleClick')}&gt;Click me&lt;/button&gt;`</code></pre>
+    </div>
+
+    <div class="api-section">
+      <h3>css</h3>
+      <p>Template tag function for creating CSS styles.</p>
+
+      <h4>Example:</h4>
+      <pre><code class="javascript">css`
+  .my-component {
+    color: red;
+    font-size: 16px;
+  }
+`</code></pre>
+    </div>
+  </section>
+
+  <section id="lifecycle-hooks">
+    <h2>Lifecycle Hooks</h2>
+
+    <div class="api-section">
+      <h3>init()</h3>
+      <p>Called when the component is initialized, before it's connected to the DOM. Use this hook to set up initial state and event listeners.</p>
+
+      <h4>Example:</h4>
+      <pre><code class="javascript">init() {
+  console.log('Component initialized');
+  this.setupEventListeners();
+}</code></pre>
+    </div>
+
+    <div class="api-section">
+      <h3>connected()</h3>
+      <p>Called when the component is connected to the DOM. Use this hook to perform operations that require the DOM to be present.</p>
+
+      <h4>Example:</h4>
+      <pre><code class="javascript">connected() {
+  console.log('Component connected to DOM');
+  this.updateUI();
+}</code></pre>
+    </div>
+
+    <div class="api-section">
+      <h3>disconnected()</h3>
+      <p>Called when the component is disconnected from the DOM. Use this hook to clean up resources and event listeners.</p>
+
+      <h4>Example:</h4>
+      <pre><code class="javascript">disconnected() {
+  console.log('Component disconnected from DOM');
+  this.cleanup();
+}</code></pre>
+    </div>
+
+    <div class="api-section">
+      <h3>propertyChanged(name, oldValue, newValue)</h3>
+      <p>Called when a property of the component changes. Use this hook to react to property changes.</p>
+
+      <div class="parameter">
+        <div class="parameter-name">name</div>
+        <div class="parameter-type">string</div>
+        <div class="parameter-description">The name of the property that changed</div>
+      </div>
+
+      <div class="parameter">
+        <div class="parameter-name">oldValue</div>
+        <div class="parameter-type">any</div>
+        <div class="parameter-description">The previous value of the property</div>
+      </div>
+
+      <div class="parameter">
+        <div class="parameter-name">newValue</div>
+        <div class="parameter-type">any</div>
+        <div class="parameter-description">The new value of the property</div>
+      </div>
+
+      <h4>Example:</h4>
+      <pre><code class="javascript">propertyChanged(name, oldValue, newValue) {
+  console.log(`Property ${name} changed from ${oldValue} to ${newValue}`);
+  if (name === 'count') {
+    this.updateCountDisplay();
+  }
+}</code></pre>
+    </div>
+
+    <div class="api-section">
+      <h3>attributeChanged(name, oldValue, newValue)</h3>
+      <p>Called when an observed attribute of the component changes. Use this hook to react to attribute changes.</p>
+
+      <div class="parameter">
+        <div class="parameter-name">name</div>
+        <div class="parameter-type">string</div>
+        <div class="parameter-description">The name of the attribute that changed</div>
+      </div>
+
+      <div class="parameter">
+        <div class="parameter-name">oldValue</div>
+        <div class="parameter-type">string</div>
+        <div class="parameter-description">The previous value of the attribute</div>
+      </div>
+
+      <div class="parameter">
+        <div class="parameter-name">newValue</div>
+        <div class="parameter-type">string</div>
+        <div class="parameter-description">The new value of the attribute</div>
+      </div>
+
+      <h4>Example:</h4>
+      <pre><code class="javascript">attributeChanged(name, oldValue, newValue) {
+  console.log(`Attribute ${name} changed from ${oldValue} to ${newValue}`);
+}</code></pre>
+    </div>
+  </section>
+
+  <section id="core-methods">
+    <h2>Core Helper Methods</h2>
+
+    <div class="api-section">
+      <h3>getElement(selector)</h3>
+      <p>Queries a single element using the provided selector. Works with both Shadow DOM and Light DOM.</p>
+
+      <div class="parameter">
+        <div class="parameter-type">string</div>
+        <div class="parameter-description">CSS selector to query</div>
+      </div>
+
+      <h4>Example:</h4>
+      <pre><code class="javascript">// Works with both Shadow DOM and Light DOM
+const button = this.getElement('#my-button');
+if (button) {
+  button.addEventListener('click', this.handleClick);
+}</code></pre>
+    </div>
+
+    <div class="api-section">
+      <h3>getAllElements(selector)</h3>
+      <p>Queries all elements matching the provided selector. Works with both Shadow DOM and Light DOM.</p>
+
+      <div class="parameter">
+        <div class="parameter-type">string</div>
+        <div class="parameter-description">CSS selector to query</div>
+      </div>
+
+      <h4>Example:</h4>
+      <pre><code class="javascript">// Works with both Shadow DOM and Light DOM
+const items = this.getAllElements('.item');
+items.forEach(item => {
+  item.classList.add('highlighted');
+});</code></pre>
+    </div>
+  </section>
+
+  <section id="component-configuration">
+    <h2>Component Configuration</h2>
+
+    <div class="api-section">
+      <h3>useShadow</h3>
+      <p>Determines whether the component uses Shadow DOM or Light DOM.</p>
+
+      <div class="parameter">
+        <div class="parameter-type">boolean</div>
+        <div class="parameter-description">Default: false. Set to true to use Shadow DOM instead of Light DOM.</div>
+      </div>
+
+      <h4>Example:</h4>
+      <pre><code class="javascript">// In JavaScript API
+define('shadow-dom-component', {
+  useShadow: true,
+  // ...
+});
+
+// In HTML component file
+exportDefault({
+  useShadow: true,
+  // ...
+});</code></pre>
+    </div>
+
+    <div class="api-section">
+      <h3>properties</h3>
+      <p>Defines the properties of the component with their default values and reflection settings.</p>
+
+      <h4>Example:</h4>
+      <pre><code class="javascript">properties: {
+  count: {
+    default: 0,
+    reflect: true // Reflect to attribute
+  },
+  name: {
+    default: 'Default Name',
+    reflect: false // Don't reflect to attribute
+  }
+}</code></pre>
+    </div>
+
+    <div class="api-section">
+      <h3>methods</h3>
+      <p>Defines the methods of the component.</p>
+
+      <h4>Example:</h4>
+      <pre><code class="javascript">methods: {
+  increment() {
+    this.count++;
+  },
+  decrement() {
+    this.count--;
+  },
+  reset() {
+    this.count = 0;
+  }
+}</code></pre>
+    </div>
+  </section>
+
+  <footer>
+    <p>Wrapped Web Components (WWC) is released under the MIT License</p>
+  </footer>
+
+  <script>
+    // Initialize syntax highlighting
+    document.addEventListener('DOMContentLoaded', (event) => {
+      document.querySelectorAll('pre code').forEach((block) => {
+        hljs.highlightBlock(block);
+      });
+    });
+  </script>
+</body>
+</html>

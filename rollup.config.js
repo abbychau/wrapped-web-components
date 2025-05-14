@@ -21,13 +21,13 @@ export default {
   ],
   plugins: [
     resolve(),
-    
+
     // Only minify in production
     production && terser(),
-    
+
     // Live reload during development
     !production && livereload({
-      watch: 'dist',
+      watch: ['dist', 'examples'],
       verbose: false
     })
   ]

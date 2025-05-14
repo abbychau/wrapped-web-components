@@ -10,7 +10,7 @@ import { Component } from './component.js';
  * @param {Object} options - The component options
  * @param {string|Function} [options.template] - The HTML template
  * @param {string} [options.styles] - The CSS styles
- * @param {boolean} [options.useShadow=true] - Whether to use Shadow DOM
+ * @param {boolean} [options.useShadow=false] - Whether to use Shadow DOM
  * @param {Array<string>} [options.observedAttributes=[]] - Attributes to observe
  * @param {Object} [options.methods={}] - Methods to add to the component
  * @param {Object} [options.properties={}] - Properties to add to the component
@@ -19,20 +19,20 @@ import { Component } from './component.js';
 export function define(tagName, options = {}) {
   // Create a new component class that extends the base Component
   class CustomComponent extends Component {}
-  
+
   // Add static properties
   CustomComponent.template = options.template || '';
   CustomComponent.styles = options.styles || '';
-  CustomComponent.useShadow = options.useShadow !== false;
+  CustomComponent.useShadow = options.useShadow === true;
   CustomComponent.observedAttributes = options.observedAttributes || [];
-  
+
   // Add methods to the prototype
   if (options.methods) {
     Object.entries(options.methods).forEach(([name, method]) => {
       CustomComponent.prototype[name] = method;
     });
   }
-  
+
   // Add property getters and setters
   if (options.properties) {
     Object.entries(options.properties).forEach(([name, config]) => {
@@ -44,11 +44,11 @@ export function define(tagName, options = {}) {
         set(value) {
           const oldValue = this._props[name];
           this._props[name] = value;
-          
+
           // Reflect to attribute if specified
           if (config.reflect) {
             const attrName = name.replace(/([A-Z])/g, '-$1').toLowerCase();
-            
+
             if (value === null || value === undefined) {
               this.removeAttribute(attrName);
             } else if (typeof value === 'boolean') {
@@ -61,7 +61,7 @@ export function define(tagName, options = {}) {
               this.setAttribute(attrName, value);
             }
           }
-          
+
           // Call property changed callback if it exists
           if (typeof this.propertyChanged === 'function' && oldValue !== value) {
             this.propertyChanged(name, oldValue, value);
@@ -70,7 +70,7 @@ export function define(tagName, options = {}) {
         configurable: true,
         enumerable: true
       });
-      
+
       // Add to observed attributes if reflective
       if (config.reflect && !CustomComponent.observedAttributes.includes(name)) {
         const attrName = name.replace(/([A-Z])/g, '-$1').toLowerCase();
@@ -78,9 +78,9 @@ export function define(tagName, options = {}) {
       }
     });
   }
-  
+
   // Define the custom element
   customElements.define(tagName, CustomComponent);
-  
+
   return CustomComponent;
 }

@@ -1,4 +1,4 @@
-<!-- 
+<!--
   my-counter.html
   A simple counter component using native HTML, CSS, and JS
 -->
@@ -8,7 +8,7 @@
     <h3>Counter: <span id="count-value">0</span></h3>
     <button id="increment-btn">Increment</button>
     <button id="decrement-btn">Decrement</button>
-    
+
   </div>
 </template>
 
@@ -18,7 +18,7 @@
     background-color: #f0f0f0;
     border-radius: 4px;
   }
-  
+
   button {
     margin-right: 5px;
     padding: 5px 10px;
@@ -28,7 +28,7 @@
     border-radius: 4px;
     cursor: pointer;
   }
-  
+
   button:hover {
     background-color: #45a049;
   }
@@ -44,55 +44,57 @@
         reflect: true
       }
     },
-    
+
     // Methods
     methods: {
+
+
       increment() {
         this.count++;
         this.updateCounter();
       },
-      
+
       decrement() {
         this.count--;
         this.updateCounter();
       },
-      
+
       updateCounter() {
-        const countElement = this.shadowRoot.querySelector('#count-value');
+        const countElement = this.getElement('#count-value');
         if (countElement) {
           countElement.textContent = this.count;
         }
       }
     },
-    
+
     // Lifecycle hooks
     init() {
       console.log('Counter initialized');
-      
+
       // Add event listeners
-      const incrementBtn = this.shadowRoot.querySelector('#increment-btn');
-      const decrementBtn = this.shadowRoot.querySelector('#decrement-btn');
-      
+      const incrementBtn = this.getElement('#increment-btn');
+      const decrementBtn = this.getElement('#decrement-btn');
+
       if (incrementBtn) {
         incrementBtn.addEventListener('click', () => this.increment());
       }
-      
+
       if (decrementBtn) {
         decrementBtn.addEventListener('click', () => this.decrement());
       }
-      
+
       // Initialize counter display
       this.updateCounter();
     },
-    
+
     connected() {
       console.log('Counter connected to DOM');
     },
-    
+
     disconnected() {
       console.log('Counter disconnected from DOM');
     },
-    
+
     propertyChanged(name, oldValue, newValue) {
       console.log(`Property ${name} changed from ${oldValue} to ${newValue}`);
     }

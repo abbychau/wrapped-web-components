@@ -14,7 +14,11 @@
     "build": "rollup -c",
     "dev": "rollup -c -w",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "serve": "http-server -o"
+    "serve": "http-server -o",
+    "start": "npm run dev & npm run serve",
+    "docs": "http-server ./docs -p 8888 -c-1 --cors -o",
+    "docs:dev": "npm run dev & npm run docs",
+    "docs:update": "npm run build && mkdir -p docs/dist && cp -r dist/* docs/dist/"
   },
   "keywords": [
     "web-components",
