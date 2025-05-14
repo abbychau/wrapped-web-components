@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="examples/assets/wwc-logo.svg" alt="WWC Logo" width="150">
+  <img src="https://raw.githubusercontent.com/abbychau/wrapped-web-components/main/docs/assets/wwc-logo.svg" alt="WWC Logo" width="150">
   <h1>Wrapped Web Components (WWC)</h1>
   <p>
     <a href="https://abbychau.github.io/wrapped-web-components/">View Demo</a> •

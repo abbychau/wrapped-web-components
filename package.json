@@ -8,7 +8,7 @@
   "types": "dist/index.d.ts",
   "files": [
     "dist",
-    "examples/assets/wwc-logo.svg"
+    "docs/assets/wwc-logo.svg"
   ],
   "scripts": {
     "build": "rollup -c",
