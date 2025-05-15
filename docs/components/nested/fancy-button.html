@@ -1,0 +1,72 @@
+<!--
+  fancy-button.html
+  A stylized button component that can be used inside other components
+-->
+
+<template>
+  <button class="fancy-button">
+    <slot>Click Me</slot>
+  </button>
+</template>
+
+<style>
+  .fancy-button {
+    padding: 10px 20px;
+    background: linear-gradient(45deg, #6a11cb, #2575fc);
+    color: white;
+    border: none;
+    border-radius: 25px;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    transition: all 0.3s ease;
+    cursor: pointer;
+  }
+
+  .fancy-button:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+  }
+
+  .fancy-button:active {
+    transform: translateY(-1px);
+  }
+</style>
+
+<script>
+  // Export component configuration
+  exportDefault({
+    properties: {
+      variant: {
+        default: 'primary',
+        reflect: true,
+        observer: 'updateVariant'
+      }
+    },
+
+    methods: {
+      updateVariant() {
+        const button = this.getElement('.fancy-button');
+        if (button) {
+          // Reset classes
+          button.classList.remove('primary', 'success', 'warning', 'danger');
+          
+          // Add variant class if it's a valid one
+          if (['primary', 'success', 'warning', 'danger'].includes(this.variant)) {
+            button.classList.add(this.variant);
+          }
+        }
+      }
+    },
+
+    init() {
+      console.log('Fancy button initialized');
+      this.updateVariant();
+    },
+
+    connected() {
+      console.log('Fancy button connected to DOM');
+    }
+  });
+</script>

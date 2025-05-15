@@ -1,0 +1,214 @@
+<!--
+  nested-container.html
+  A component that demonstrates nesting by using the fancy-button component
+-->
+
+<template>
+  <div class="container">
+    <h3>Nested Components Example</h3>
+    <div class="description">
+      <p>This container uses the fancy-button component internally:</p>
+    </div>
+    <div class="button-container">
+      <fancy-button id="success-btn" variant="success" class="counter-button">Success</fancy-button>
+      <fancy-button id="warning-btn" variant="warning" class="counter-button">Warning</fancy-button>
+      <fancy-button id="danger-btn" variant="danger" class="counter-button">Danger</fancy-button>
+    </div>
+    <div class="add-button-section">
+      <button id="add-button" class="add-button">Add New Button</button>
+    </div>
+    <div class="counter-section">
+      <p>Clicks: <span id="click-count">0</span></p>
+    </div>
+  </div>
+</template>
+
+<style>
+  .container {
+    padding: 20px;
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  }
+
+  .description {
+    margin-bottom: 15px;
+    color: #495057;
+  }
+
+  .button-container {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 20px;
+  }
+
+  .counter-section {
+    padding: 10px;
+    background-color: #e9ecef;
+    border-radius: 4px;
+    font-weight: bold;
+  }
+
+  .add-button-section {
+    margin: 15px 0;
+    text-align: center;
+  }
+
+  .add-button {
+    padding: 8px 16px;
+    background-color: #6c757d;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+  }
+
+  .add-button:hover {
+    background-color: #5a6268;
+  }
+
+  /* Variant styles for the fancy buttons */
+  fancy-button.success .fancy-button {
+    background: linear-gradient(45deg, #28a745, #20c997);
+  }
+
+  fancy-button.warning .fancy-button {
+    background: linear-gradient(45deg, #ffc107, #fd7e14);
+  }
+
+  fancy-button.danger .fancy-button {
+    background: linear-gradient(45deg, #dc3545, #f77087);
+  }
+</style>
+
+<script>
+  // Export component configuration
+  exportDefault({
+    // Properties
+    properties: {
+      clickCount: {
+        default: 0,
+        reflect: true
+      },
+      buttonCount: {
+        default: 3,
+        reflect: true
+      }
+    },
+
+    // Methods
+    methods: {
+      incrementCount() {
+        this.clickCount++;
+        this.updateCounter();
+      },
+      
+      updateCounter() {
+        const countElement = this.getElement('#click-count');
+        if (countElement) {
+          countElement.textContent = this.clickCount;
+        }
+      },
+      
+      // Method bound to document to handle all button clicks via event delegation
+      handleButtonClick(event) {
+        // This is pre-bound in connected() to avoid CSP issues
+        const button = event.target.closest('fancy-button');
+        if (button && button.closest('.container')) {
+          this.incrementCount();
+        }
+      },
+      
+      // Method to handle add button clicks
+      handleAddButtonClick() {
+        // This is pre-bound in connected() to avoid CSP issues
+        this.addNewButton();
+      },
+      
+      addNewButton() {
+        try {
+          // Increment button count
+          this.buttonCount++;
+          
+          // Create random variant from available options
+          const variants = ['primary', 'success', 'warning', 'danger'];
+          const randomVariant = variants[Math.floor(Math.random() * variants.length)];
+          
+          // Create button container first
+          const buttonContainer = this.getElement('.button-container');
+          if (!buttonContainer) {
+            console.error('Button container not found');
+            return;
+          }
+          
+          // Check if the custom element is defined
+          if (customElements.get('fancy-button')) {
+            // Create the new button using HTML instead of createElement
+            // This ensures the custom element is fully initialized before attributes are set
+            const buttonHtml = document.createElement('div');
+            buttonHtml.innerHTML = `<fancy-button class="counter-button">Button ${this.buttonCount}</fancy-button>`;
+            
+            // Get the button from the wrapper
+            const newButton = buttonHtml.firstElementChild;
+            
+            // Set the variant after the element is created from HTML
+            // This avoids setting attributes during construction
+            requestAnimationFrame(() => {
+              newButton.setAttribute('variant', randomVariant);
+            });
+            
+            // Add to the button container
+            buttonContainer.appendChild(newButton);
+          } else {
+            console.error('fancy-button custom element is not defined');
+          }
+        } catch (error) {
+          console.error('Error adding new button:', error);
+        }
+      }
+    },
+
+    // Lifecycle hooks
+    init() {
+      console.log('Nested container initialized');
+      
+      // Pre-bind event handlers to avoid creating functions at runtime
+      // This is crucial for CSP compliance
+      this._boundHandleButtonClick = this.handleButtonClick.bind(this);
+      this._boundHandleAddButtonClick = this.handleAddButtonClick.bind(this);
+    },
+
+    connected() {
+      console.log('Nested container connected to DOM');
+      
+      try {
+        // Use event delegation at the document level
+        document.addEventListener('click', this._boundHandleButtonClick);
+        
+        // Add event listener to the add button
+        const addButton = this.getElement('#add-button');
+        if (addButton) {
+          addButton.addEventListener('click', this._boundHandleAddButtonClick);
+        }
+        
+        // Initialize counter display
+        this.updateCounter();
+      } catch (error) {
+        console.error('Error in connected hook:', error);
+      }
+    },
+    
+    disconnected() {
+      console.log('Nested container disconnected from DOM');
+      
+      // Clean up event listeners
+      document.removeEventListener('click', this._boundHandleButtonClick);
+      
+      const addButton = this.getElement('#add-button');
+      if (addButton) {
+        addButton.removeEventListener('click', this._boundHandleAddButtonClick);
+      }
+    }
+  });
+</script>

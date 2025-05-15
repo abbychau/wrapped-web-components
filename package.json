@@ -18,7 +18,8 @@
     "start": "npm run dev & npm run serve",
     "docs": "http-server ./docs -p 8888 -c-1 --cors -o",
     "docs:dev": "npm run dev & npm run docs",
-    "docs:update": "npm run build && mkdir -p docs/dist && cp -r dist/* docs/dist/"
+    "docs:build": "rollup -c",
+    "docs:update": "mkdir -p docs/dist && cp -r dist/* docs/dist/"
   },
   "keywords": [
     "web-components",

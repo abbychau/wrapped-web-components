@@ -190,6 +190,38 @@
       </div>
     </div>
   </div>
+  
+  <div class="example">
+    <h2>Nested Components</h2>
+    <p>This example demonstrates how to create and use nested Web Components using WWC.</p>
+
+    <div class="demo">
+      <h3>Nested Container with Fancy Buttons</h3>
+      <nested-container></nested-container>
+      
+      <h3>Individual Fancy Button</h3>
+      <fancy-button>I'm a standalone button</fancy-button>
+    </div>
+
+    <div class="source-tree">
+      <div class="source-tree-header" onclick="toggleNestedSourceTree()">
+        <span>View Source Code</span>
+        <span class="nested-toggle-icon">▼</span>
+      </div>
+      <div class="source-tree-content" id="nested-source-tree-content">
+        <ul class="file-tree">
+          <li><a href="#" onclick="showFile('fancy-button', 'html'); return false;">fancy-button.html</a></li>
+          <li><a href="#" onclick="showFile('nested-container', 'html'); return false;">nested-container.html</a></li>
+        </ul>
+
+        <div class="file-viewer">
+          <h3 class="file-title">Select a file to view</h3>
+          <div class="file-loading">Loading...</div>
+          <pre><code></code></pre>
+        </div>
+      </div>
+    </div>
+  </div>
 
   <footer>
     <p>Wrapped Web Components (WWC) is released under the MIT License</p>
@@ -201,7 +233,9 @@
       'my-counter': './components/my-counter.html',
       'light-dom-component': './components/light-dom-component.html',
       'todo-list': './components/todo-list.html',
-      'register-example': './js/register-example.js'
+      'register-example': './js/register-example.js',
+      'fancy-button': './components/nested/fancy-button.html',
+      'nested-container': './components/nested/nested-container.html'
     };
     
     // Cache for loaded files
@@ -212,6 +246,14 @@
       content.classList.toggle('active');
 
       const toggleIcon = document.querySelector('.toggle-icon');
+      toggleIcon.textContent = content.classList.contains('active') ? '▲' : '▼';
+    }
+
+    function toggleNestedSourceTree() {
+      const content = document.getElementById('nested-source-tree-content');
+      content.classList.toggle('active');
+
+      const toggleIcon = document.querySelector('.nested-toggle-icon');
       toggleIcon.textContent = content.classList.contains('active') ? '▲' : '▼';
     }
 
@@ -283,6 +325,8 @@
       register('my-counter', './components/my-counter.html');
       register('light-dom-component', './components/light-dom-component.html');
       register('todo-list', './components/todo-list.html');
+      register('fancy-button', './components/nested/fancy-button.html');
+      register('nested-container', './components/nested/nested-container.html');
     }).catch(error => {
       console.error('Error importing module:', error);
     });

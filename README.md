@@ -45,7 +45,7 @@ The easiest way to use the library is directly from a CDN:
 
 #### UMD Build (Global Variable)
 ```html
-<script src="https://unpkg.com/wrapped-web-components/dist/index.js"></script>
+<script src="https://unpkg.com/wrapped-web-components/dist/index.min.js"></script>
 <script>
   // The library is available as a global variable
   const { define, html, css, register } = WebComponentWrapper;
@@ -55,13 +55,13 @@ The easiest way to use the library is directly from a CDN:
 #### ES Module
 ```html
 <script type="module">
-  import { define, html, css, register } from 'https://unpkg.com/wrapped-web-components/dist/index.esm.js';
+  import { define, html, css, register } from 'https://unpkg.com/wrapped-web-components/dist/index.esm.min.js';
 </script>
 ```
 
 Alternative: 
-- `https://cdn.jsdelivr.net/npm/wrapped-web-components/dist/index.esm.js`
-- `https://cdn.jsdelivr.net/npm/wrapped-web-components/dist/index.js`
+- `https://cdn.jsdelivr.net/npm/wrapped-web-components/dist/index.esm.min.js`
+- `https://cdn.jsdelivr.net/npm/wrapped-web-components/dist/index.min.js`
 
 Can be useful if unpkg is down or not updated, also recommended
 
