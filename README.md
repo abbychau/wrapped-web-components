@@ -1,6 +1,7 @@
 <div align="center">
   <img src="https://raw.githubusercontent.com/abbychau/wrapped-web-components/main/docs/assets/wwc-logo.svg" alt="WWC Logo" width="150">
   <h1>Wrapped Web Components (WWC)</h1>
+  <p><em>Include it with CDN, you no longer need to setup a CI/CD pipeline just for a simple webapp.</em></p>
   <p>
     <a href="https://abbychau.github.io/wrapped-web-components/">View Demo</a> •
     <a href="https://www.npmjs.com/package/wrapped-web-components">NPM Package</a>
@@ -11,26 +12,36 @@ A lightweight JavaScript library that simplifies web component creation by allow
 
 **New Feature**: Now supports defining components in separate HTML files with native HTML, CSS, and JS syntax!
 
+## Why Wrapped Web Components?
+
+While modern web frameworks (e.g. React, Vue, Angular) excel for complex applications, they're often overkill for simpler projects or when you just need a few interactive components on a page. jQuery-template and other lightweight alternatives (e.g. htmx) exist, but they often lack proper component encapsulation and can become difficult to manage as your project grows.
+
+Moreover, large frameworks are UNABLE to be included in a `script` tag, which means you need to set up a build process, package manager, and other dependencies just to get started. This can be overwhelming for small projects or for developers who prefer a more straightforward approach.
+
+Additionally, while Web Components provide a native way to create reusable components, they can be cumbersome to work with. Most importantly, you need to write a lot of boilerplate code to define a component, including setting up the `template`, `shadowRoot`, and other low-level APIs. This can be tedious and error-prone, especially for developers who are new to Web Components.
+
+Svelte did a great job of solving this problem by providing a simple syntax for defining components; Google Lit also did a great job of creating Web Components using JSX; but they still requires a build step and a package manager. This means you can't just include it in your HTML file and start using it right away.
+
+Here comes **Wrapped Web Components** (WWC). WWC is a lightweight library that allows you to create Web Components using **NATIVE** HTML, CSS, and JavaScript. You just need to register the components in a `script` tag, and put the component files in the same directory as your HTML file. There is nearly no learning curve to write a component. They are just like a regular HTML (or Svelte if you are familiar with it) file, but with a few extra features.
+
 ## Features
 
-- 🌟 Simple API for defining custom elements
-- 📝 Write components using plain HTML templates
-- 📄 Define components in separate HTML files with native syntax
-- 🎨 Add styles with CSS template literals
-- 🔄 Automatic property-to-attribute reflection
-- 🧩 Works with or without Shadow DOM
-- 🔌 Event binding directly in templates
-- 🔄 Lifecycle hooks for component management
+- 🚀 **No Need to Compile** - Use directly in your HTML without any build steps or compilation process.
+- 📦 **No Need to npm Install** - Load directly from CDN or include the script file - no package manager required (though you can still use npm if you prefer).
+- 📄 **Separated Component Files** - Define components in separate HTML files with native syntax for better organization and maintainability.
+- 🌟 **Simple Hooks** - Intuitive lifecycle hooks: `init`, `connected`, `disconnected`, `attributeChanged`, and `propertyChanged`.
+- 🧩 **Light DOM by Default** - Uses Light DOM by default for better CSS integration, with option to enable Shadow DOM when encapsulation is needed.
+- 🖌️ **CDN Friendly** - Load components from a CDN without any additional setup. Just include the script tag and you're good to go!
 
 ## Installation
 
-### NPM
+### NPM (only if you prefer to host WWC)
 ```bash
 npm install wrapped-web-components
 ```
 
 ### CDN
-You can also use the library directly from a CDN:
+The easiest way to use the library is directly from a CDN:
 
 #### UMD Build (Global Variable)
 ```html
@@ -110,9 +121,7 @@ Create a component in a separate HTML file with native HTML, CSS, and JS:
         this.count--;
         this.updateCounter();
       },
-
-
-
+      
       updateCounter() {
         const countElement = this.getElement('#count-value');
         if (countElement) {
@@ -366,4 +375,8 @@ const items = this.getAllElements('.item');
 
 ## License
 
-MIT
+Wrapped Web Components (WWC) is released under the MIT License.
+
+---
+
+**Start building with WWC today!** Check out the [demo](https://abbychau.github.io/wrapped-web-components/) for more examples and documentation.
