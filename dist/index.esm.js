@@ -1,3 +1,5 @@
+
+(function(l, r) { if (!l || l.getElementById('livereloadscript')) return; r = l.createElement('script'); r.async = 1; r.src = '//' + (self.location.host || 'localhost').split(':')[0] + ':35729/livereload.js?snipver=1'; r.id = 'livereloadscript'; l.getElementsByTagName('head')[0].appendChild(r) })(self.document);
 /**
  * Base Component class that extends HTMLElement
  * Provides the foundation for creating web components with plain HTML, JS, and CSS
@@ -253,6 +255,66 @@ class Component extends HTMLElement {
       this._applyTemplate();
     }
   }
+
+  /**
+   * Renders repeatable elements from a data array using a template element
+   * @param {string} containerSelector - CSS selector for the container element
+   * @param {string} templateRefAttribute - The data-repeatable-ref attribute value of the template element
+   * @param {Array} dataArray - Array of data objects to render
+   * @param {Function} configureElementCallback - Callback to configure each cloned element, receives (element, dataItem)
+   * @returns {Array} - Array of created elements
+   */
+  renderRepeatableElements(containerSelector, templateRefAttribute, dataArray, configureElementCallback) {
+    try {
+      // Get container
+      const container = this.getElement(containerSelector);
+      if (!container) {
+        console.error(`Container element not found: ${containerSelector}`);
+        return [];
+      }
+
+      // Find the template element using data-repeatable-ref attribute
+      const templateSelector = `[data-repeatable-ref="${templateRefAttribute}"]`;
+      const templateElement = this.getElement(templateSelector);
+
+      if (!templateElement) {
+        console.error(`Template element not found with ref: ${templateRefAttribute}`);
+        return [];
+      }
+
+      // Clone the template element to preserve it
+      const template = templateElement.cloneNode(true);
+
+      // Clear the container but preserve the structure
+      container.innerHTML = '';
+
+      // Create array to store created elements
+      const createdElements = [];
+
+      // Create and append elements for each data item
+      dataArray.forEach(dataItem => {
+        // Clone the template
+        const newElement = template.cloneNode(true);
+
+        // Remove the template reference attribute
+        newElement.removeAttribute('data-repeatable-ref');
+
+        // Configure the element using the callback
+        if (typeof configureElementCallback === 'function') {
+          configureElementCallback(newElement, dataItem);
+        }
+
+        // Add to container
+        container.appendChild(newElement);
+        createdElements.push(newElement);
+      });
+
+      return createdElements;
+    } catch (error) {
+      console.error('Error rendering repeatable elements:', error);
+      return [];
+    }
+  }
 }
 
 /**
@@ -398,6 +460,11 @@ function define(tagName, options = {}) {
             }
           }
 
+          // Call observer method if specified
+          if (config.observer && typeof this[config.observer] === 'function') {
+            this[config.observer](value, oldValue, name);
+          }
+          
           // Call property changed callback if it exists
           if (typeof this.propertyChanged === 'function' && oldValue !== value) {
             this.propertyChanged(name, oldValue, value);
@@ -607,6 +674,11 @@ function registerComponent(tagName, options) {
             } else {
               this.setAttribute(attrName, value);
             }
+          }
+
+          // Call observer method if specified
+          if (config.observer && typeof this[config.observer] === 'function') {
+            this[config.observer](value, oldValue, name);
           }
 
           // Call property changed callback if it exists

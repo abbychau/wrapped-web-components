@@ -90,6 +90,11 @@ function registerComponent(tagName, options) {
             }
           }
 
+          // Call observer method if specified
+          if (config.observer && typeof this[config.observer] === 'function') {
+            this[config.observer](value, oldValue, name);
+          }
+
           // Call property changed callback if it exists
           if (typeof this.propertyChanged === 'function' && oldValue !== value) {
             this.propertyChanged(name, oldValue, value);

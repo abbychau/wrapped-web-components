@@ -10,9 +10,8 @@
       <p>This container uses the fancy-button component internally:</p>
     </div>
     <div class="button-container">
-      <fancy-button id="success-btn" variant="success" class="counter-button">Success</fancy-button>
-      <fancy-button id="warning-btn" variant="warning" class="counter-button">Warning</fancy-button>
-      <fancy-button id="danger-btn" variant="danger" class="counter-button">Danger</fancy-button>
+      <!-- Buttons will be rendered here from the buttons array -->
+      <fancy-button data-repeatable-ref="fancyBtnGroupMember" />
     </div>
     <div class="add-button-section">
       <button id="add-button" class="add-button">Add New Button</button>
@@ -40,6 +39,7 @@
     display: flex;
     gap: 15px;
     margin-bottom: 20px;
+    flex-wrap: wrap;
   }
 
   .counter-section {
@@ -91,9 +91,14 @@
         default: 0,
         reflect: true
       },
-      buttonCount: {
-        default: 3,
-        reflect: true
+      buttons: {
+        default: [
+          { id: 'success-btn', text: 'Success', variant: 'success' },
+          { id: 'warning-btn', text: 'Warning', variant: 'warning' },
+          { id: 'danger-btn', text: 'Danger', variant: 'danger' }
+        ],
+        reflect: false, // Don't reflect complex objects to attributes
+        observer: 'renderButtons' // Call renderButtons when buttons array changes
       }
     },
 
@@ -126,45 +131,61 @@
         this.addNewButton();
       },
       
+      // Create a new button by adding to the buttons array
       addNewButton() {
         try {
-          // Increment button count
-          this.buttonCount++;
-          
           // Create random variant from available options
           const variants = ['primary', 'success', 'warning', 'danger'];
           const randomVariant = variants[Math.floor(Math.random() * variants.length)];
           
-          // Create button container first
+          // Create a new button object
+          const newButton = {
+            id: `btn-${Date.now()}`,
+            text: `Button ${this.buttons.length + 1}`,
+            variant: randomVariant
+          };
+          
+          // Add the new button to the buttons array
+          // This will automatically trigger the renderButtons method through the observer
+          this.buttons = [...this.buttons, newButton];
+          
+        } catch (error) {
+          console.error('Error adding new button:', error);
+        }
+      },
+      
+      // Render all buttons from the buttons array
+      renderButtons() {
+        try {
+          // Get button container
           const buttonContainer = this.getElement('.button-container');
           if (!buttonContainer) {
             console.error('Button container not found');
             return;
           }
           
-          // Check if the custom element is defined
+          // Check if fancy-button is defined
           if (customElements.get('fancy-button')) {
-            // Create the new button using HTML instead of createElement
-            // This ensures the custom element is fully initialized before attributes are set
-            const buttonHtml = document.createElement('div');
-            buttonHtml.innerHTML = `<fancy-button class="counter-button">Button ${this.buttonCount}</fancy-button>`;
+            // Efficient approach: use DocumentFragment and innerHTML
+            // Create markup for all buttons at once
+            let buttonMarkup = '';
             
-            // Get the button from the wrapper
-            const newButton = buttonHtml.firstElementChild;
-            
-            // Set the variant after the element is created from HTML
-            // This avoids setting attributes during construction
-            requestAnimationFrame(() => {
-              newButton.setAttribute('variant', randomVariant);
+            this.buttons.forEach(buttonData => {
+              // Create HTML string for each button
+              buttonMarkup += `<fancy-button 
+                id="${buttonData.id}" 
+                variant="${buttonData.variant}" 
+                class="counter-button"
+              >${buttonData.text}</fancy-button>`;
             });
             
-            // Add to the button container
-            buttonContainer.appendChild(newButton);
+            // Set the innerHTML of the container all at once
+            buttonContainer.innerHTML = buttonMarkup;
           } else {
             console.error('fancy-button custom element is not defined');
           }
         } catch (error) {
-          console.error('Error adding new button:', error);
+          console.error('Error rendering buttons:', error);
         }
       }
     },
@@ -194,6 +215,9 @@
         
         // Initialize counter display
         this.updateCounter();
+        
+        // Render initial buttons
+        this.renderButtons();
       } catch (error) {
         console.error('Error in connected hook:', error);
       }
@@ -208,6 +232,18 @@
       const addButton = this.getElement('#add-button');
       if (addButton) {
         addButton.removeEventListener('click', this._boundHandleAddButtonClick);
+      }
+    },
+    
+    // Called when a property changes
+    propertyChanged(name, oldValue, newValue) {
+      console.log(`Property ${name} changed from ${oldValue} to ${newValue}`);
+      
+      // If buttons array changes, render the buttons again
+      if (name === 'buttons') {
+        // Note: The renderButtons method is automatically called via the observer
+        // This is just for logging purposes
+        console.log('Buttons array changed, rendering updated buttons');
       }
     }
   });

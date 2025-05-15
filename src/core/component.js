@@ -253,4 +253,64 @@ export class Component extends HTMLElement {
       this._applyTemplate();
     }
   }
+
+  /**
+   * Renders repeatable elements from a data array using a template element
+   * @param {string} containerSelector - CSS selector for the container element
+   * @param {string} templateRefAttribute - The data-repeatable-ref attribute value of the template element
+   * @param {Array} dataArray - Array of data objects to render
+   * @param {Function} configureElementCallback - Callback to configure each cloned element, receives (element, dataItem)
+   * @returns {Array} - Array of created elements
+   */
+  renderRepeatableElements(containerSelector, templateRefAttribute, dataArray, configureElementCallback) {
+    try {
+      // Get container
+      const container = this.getElement(containerSelector);
+      if (!container) {
+        console.error(`Container element not found: ${containerSelector}`);
+        return [];
+      }
+
+      // Find the template element using data-repeatable-ref attribute
+      const templateSelector = `[data-repeatable-ref="${templateRefAttribute}"]`;
+      const templateElement = this.getElement(templateSelector);
+
+      if (!templateElement) {
+        console.error(`Template element not found with ref: ${templateRefAttribute}`);
+        return [];
+      }
+
+      // Clone the template element to preserve it
+      const template = templateElement.cloneNode(true);
+
+      // Clear the container but preserve the structure
+      container.innerHTML = '';
+
+      // Create array to store created elements
+      const createdElements = [];
+
+      // Create and append elements for each data item
+      dataArray.forEach(dataItem => {
+        // Clone the template
+        const newElement = template.cloneNode(true);
+
+        // Remove the template reference attribute
+        newElement.removeAttribute('data-repeatable-ref');
+
+        // Configure the element using the callback
+        if (typeof configureElementCallback === 'function') {
+          configureElementCallback(newElement, dataItem);
+        }
+
+        // Add to container
+        container.appendChild(newElement);
+        createdElements.push(newElement);
+      });
+
+      return createdElements;
+    } catch (error) {
+      console.error('Error rendering repeatable elements:', error);
+      return [];
+    }
+  }
 }
