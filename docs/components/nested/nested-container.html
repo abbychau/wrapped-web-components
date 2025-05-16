@@ -19,6 +19,12 @@
     <div class="counter-section">
       <p>Clicks: <span id="click-count">0</span></p>
     </div>
+    <div class="button-list">
+      <h4>Button List:</h4>
+      <ul id="button-list">
+        
+      </ul>
+    </div>
   </div>
 </template>
 
@@ -184,6 +190,14 @@
           } else {
             console.error('fancy-button custom element is not defined');
           }
+
+          // Update the button list in the UI
+          const buttonList = this.getElement('#button-list');
+          if (buttonList) {
+            buttonList.innerHTML = ''; // Clear existing list
+            var str = JSON.stringify(this.buttons, null, 2)
+            buttonList.innerHTML = '<pre>' + str + '</pre>';
+          }
         } catch (error) {
           console.error('Error rendering buttons:', error);
         }
@@ -237,7 +251,10 @@
     
     // Called when a property changes
     propertyChanged(name, oldValue, newValue) {
-      console.log(`Property ${name} changed from ${oldValue} to ${newValue}`);
+      console.log(`Property ${name} changed from`);
+      console.log(oldValue);
+      console.log('to');
+      console.log(newValue);
       
       // If buttons array changes, render the buttons again
       if (name === 'buttons') {
