@@ -172,11 +172,13 @@
           
           // Check if fancy-button is defined
           if (customElements.get('fancy-button')) {
+            console.log('fancy-button custom element is defined');
             // Efficient approach: use DocumentFragment and innerHTML
             // Create markup for all buttons at once
             let buttonMarkup = '';
-            
+            console.log('Rendering buttons:', this.buttons);
             this.buttons.forEach(buttonData => {
+              console.log('Rendering button:', buttonData);
               // Create HTML string for each button
               buttonMarkup += `<fancy-button 
                 id="${buttonData.id}" 
