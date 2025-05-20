@@ -210,13 +210,13 @@
       </div>
       <div class="source-tree-content" id="nested-source-tree-content">
         <ul class="file-tree">
-          <li><a href="#" onclick="showFile('fancy-button', 'html'); return false;">fancy-button.html</a></li>
-          <li><a href="#" onclick="showFile('nested-container', 'html'); return false;">nested-container.html</a></li>
+          <li><a href="#" onclick="showFile('fancy-button', 'html', '.file-loading-nested'); return false;">fancy-button.html</a></li>
+          <li><a href="#" onclick="showFile('nested-container', 'html', '.file-loading-nested'); return false;">nested-container.html</a></li>
         </ul>
 
         <div class="file-viewer">
           <h3 class="file-title">Select a file to view</h3>
-          <div class="file-loading">Loading...</div>
+          <div class="file-loading-nested">Loading...</div>
           <pre><code></code></pre>
         </div>
       </div>
@@ -257,7 +257,7 @@
       toggleIcon.textContent = content.classList.contains('active') ? '▲' : '▼';
     }
 
-    function showFile(fileId, language) {
+    function showFile(fileId, language, indicatorSelector = '.file-loading') {
       // Update the file title
       const fileTitle = document.querySelector('.file-title');
       const fileName = fileId === 'register-example' ? 'register-example.js' : `${fileId}.html`;
@@ -265,7 +265,7 @@
       
       // Get the code element and loading indicator
       const fileViewer = document.querySelector('.file-viewer');
-      const loadingIndicator = fileViewer.querySelector('.file-loading');
+      const loadingIndicator = fileViewer.querySelector(indicatorClass);
       const codeElement = fileViewer.querySelector('pre code');
       
       // Set the language class
